@@ -1,0 +1,92 @@
+name: Verificar
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verificar-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site:
+    name: Tipos, build e verificações do HTML
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: astro check
+        run: pnpm run check
+
+      - name: TypeScript
+        run: pnpm run typecheck
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Links, sitemap, SEO e peso
+        run: pnpm run verificar
+
+      - name: Pacote de publicação (lista de permissão)
+        run: pnpm run publicacao
+
+  endpoint:
+    name: Bateria do endpoint PHP
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, intl
+          coverage: none
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Subir o endpoint com a configuração de teste
+        env:
+          ITECH_CONFIG: ${{ github.workspace }}/ferramentas/teste/contato.config.php
+        run: |
+          php -S 127.0.0.1:8099 -t public > php.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -s -o /dev/null http://127.0.0.1:8099/api/contato.php && break
+            sleep 0.5
+          done
+
+      - name: Bateria
+        run: node ferramentas/testar-endpoint.mjs http://127.0.0.1:8099/api/contato.php
+
+      - name: Log do PHP
+        if: failure()
+        run: cat php.log
+
+  segredos:
+    name: Busca de segredos
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

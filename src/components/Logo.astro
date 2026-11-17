@@ -1,0 +1,104 @@
+---
+const CAIXA = "8 581 776 92";
+const PROPORCAO_COMPLETA = 776 / 92;
+const PROPORCAO_REDUZIDA = 214 / 92;
+
+interface Props {
+  altura?: number;
+  variante?: "completa" | "reduzida" | "simbolo";
+  marca?: "colchete" | "monograma";
+  comNome?: boolean;
+}
+
+const { altura = 24, variante, marca = "colchete", comNome } = Astro.props;
+const v = variante ?? (comNome === false ? "simbolo" : "completa");
+
+const nomeAcessivel = "iTech Soluções Digitais";
+---
+{
+  v === "simbolo" ? (
+    <span class="logo logo-simbolo" style={`--h: ${altura}px`}>
+      <svg
+        class="logo-desenho"
+        viewBox="0 0 24 24"
+        role="img"
+        aria-label={nomeAcessivel}
+        focusable="false"
+      >
+        {marca === "colchete" && (
+          <>
+            <path d="M14 3.5 H5 V20.5 H14" />
+            <path d="M2 12 H22" />
+          </>
+        )}
+        {marca === "monograma" && (
+          <>
+            <path d="M4.5 4 V5.5" />
+            <path d="M4.5 10 V20" />
+            <path d="M10 10 H21.5" />
+            <path d="M15.75 10 V20" />
+          </>
+        )}
+      </svg>
+    </span>
+  ) : (
+    <svg
+      class={`logo logo-${v}`}
+      style={`--h: ${altura}px`}
+      viewBox={CAIXA}
+      /* `slice` com alinhamento a esquerda e o que produz a variante
+         reduzida: a caixa mais estreita corta o que passa dela, e o
+         que sobra e exatamente "iTech.". Um desenho, dois recortes. */
+      preserveAspectRatio="xMinYMid slice"
+      role="img"
+      aria-label={nomeAcessivel}
+      focusable="false"
+    >
+      <use href="#marca-itech" />
+    </svg>
+  )
+}
+
+<style
+  define:vars={{
+    propCompleta: String(PROPORCAO_COMPLETA),
+    propReduzida: String(PROPORCAO_REDUZIDA),
+  }}
+>
+  .logo {
+    display: inline-block;
+    block-size: var(--h);
+    flex: none;
+    vertical-align: middle;
+  }
+
+  .logo-completa {
+    inline-size: calc(var(--h) * var(--propCompleta));
+  }
+
+  .logo-reduzida {
+    inline-size: calc(var(--h) * var(--propReduzida));
+  }
+
+  @media (max-width: 24rem) {
+    .logo-completa {
+      inline-size: calc(var(--h) * var(--propReduzida));
+    }
+  }
+
+  .logo-simbolo {
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+  }
+
+  .logo-desenho {
+    block-size: var(--h);
+    inline-size: var(--h);
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3;
+    stroke-linecap: square;
+  }
+</style>

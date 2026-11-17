@@ -1,0 +1,12 @@
+# As páginas de retorno do formulário usam noindex e não aparecem aqui:
+# um Disallow impediria o rastreador de chegar a elas e ler o noindex, e o
+# endereço poderia ser indexado sem conteúdo.
+#
+# /api/ não é página e não tem como carregar noindex, então o Disallow é
+# o mecanismo certo para ele.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://itechsolucoesdigitais.com/sitemap-index.xml

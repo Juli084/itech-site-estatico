@@ -1,0 +1,369 @@
+---
+import Site from "../../layouts/Site.astro";
+import {
+  empresa,
+  contato,
+  linkWhatsapp,
+  envioValidadoEmProducao,
+} from "../../content/itech";
+import { paginasServico } from "../../content/servicos";
+---
+<Site
+  titulo={`Contato | ${empresa.nome}`}
+  descricao="Fale com a iTech sobre desenvolvimento web, cibersegurança ou tráfego pago. Atendimento presencial em Sorocaba e remoto para todo o Brasil."
+  atual="/contato/"
+>
+  <section class="topo-pag faixa" aria-labelledby="h1">
+    <div class="limite">
+      <p class="rotulo">Contato</p>
+      <h1 id="h1">Conte o que sua<br />empresa precisa</h1>
+      <p class="sub">
+        Escreva o que está acontecendo hoje. Se ainda não souber qual serviço
+        procura, tudo bem. A conversa começa por entender a necessidade.
+      </p>
+    </div>
+  </section>
+
+  <section class="faixa secao" aria-labelledby="h2-form">
+    <div class="limite form-grade">
+      <div>
+        <h2 id="h2-form">Formulário</h2>
+
+        {!envioValidadoEmProducao && (
+          <div class="aviso-estado" role="status">
+            <p class="aviso-tit">Este formulário ainda não está no ar</p>
+            <p>
+              Estamos terminando a configuração do envio. <b>Uma mensagem
+              enviada por aqui agora não chega até nós</b>, e a página vai
+              dizer isso em vez de fingir que deu certo.
+            </p>
+            <p>
+              Para falar com a iTech hoje, use o e-mail ou o WhatsApp ao lado.
+            </p>
+          </div>
+        )}
+
+        <p class="form-nota">
+          Já tem um site, uma ideia ou alguma informação sobre o que precisa?
+          Compartilhe o endereço do site atual, o que gostaria que o visitante
+          pudesse fazer e os textos ou imagens que já possui. Não é necessário
+          ter tudo pronto para começar a conversa.
+        </p>
+
+        <form class="form" method="post" action="/api/contato.php">
+          <div class="armadilha" aria-hidden="true">
+            <label for="empresa_site">Não preencha este campo</label>
+            <input
+              type="text"
+              id="empresa_site"
+              name="empresa_site"
+              tabindex="-1"
+              autocomplete="off"
+            />
+          </div>
+          <div class="campo">
+            <label for="nome">Nome</label>
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              autocomplete="name"
+              minlength="2" maxlength="120"
+              required
+            />
+          </div>
+
+          <div class="campo">
+            <label for="email">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autocomplete="email"
+              maxlength="180"
+              required
+            />
+          </div>
+
+          <div class="campo">
+            <label for="telefone">
+              Telefone <span class="opcional">(opcional)</span>
+            </label>
+            <input
+              type="tel"
+              id="telefone"
+              name="telefone"
+              autocomplete="tel"
+              maxlength="40"
+            />
+          </div>
+
+          <div class="campo">
+            <label for="servico">Sobre qual serviço</label>
+            <select id="servico" name="servico">
+              <option value="">Ainda não sei dizer</option>
+              {
+                paginasServico.map((s) => (
+                  <option value={s.slug}>{s.titulo}</option>
+                ))
+              }
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="mensagem">O que sua empresa precisa</label>
+            <textarea
+              id="mensagem"
+              name="mensagem"
+              rows="6"
+              minlength="10" maxlength="3000"
+              required
+             ></textarea>
+            <p class="ajuda" id="ajuda-mensagem">
+              Qual é a situação hoje, e o que mudaria se ela fosse resolvida.
+            </p>
+          </div>
+
+          <button class="acao" type="submit">
+            Enviar mensagem
+          </button>
+          <p class="nota-privacidade">
+            Ao enviar, os dados preenchidos serão usados apenas para responder a
+            este contato. Ver a <a href="/privacidade/">política de privacidade</a>.
+          </p>
+        </form>
+      </div>
+
+      <aside class="lado" aria-labelledby="h2-canais">
+        <h2 id="h2-canais">Outros canais</h2>
+        <ul class="canais">
+          <li>
+            <span class="canal-rot">E-mail</span>
+            <a href={`mailto:${contato.email}`}>{contato.email}</a>
+          </li>
+          <li>
+            <span class="canal-rot">WhatsApp</span>
+            <a href={linkWhatsapp} rel="noopener">{contato.whatsapp}</a>
+          </li>
+        </ul>
+        <p class="canais-nota">
+          Se preferir, você também pode usar o formulário desta página.
+        </p>
+
+        <h3>Onde atuamos</h3>
+        <p class="lado-txt">
+          Presencialmente em {empresa.cidade} e à distância para todo o
+          Brasil. O formato de atendimento depende do serviço e do que o
+          projeto exigir.
+        </p>
+      </aside>
+    </div>
+  </section>
+</Site>
+
+<style>
+  .topo-pag {
+    background: var(--cor-escuro);
+    color: var(--cor-papel);
+    padding-block: var(--e-12);
+  }
+  .rotulo {
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-acento-sobre-escuro);
+    margin-block-end: var(--e-4);
+  }
+  h1 {
+    font-size: clamp(2.125rem, 1.2rem + 3.4vw, 3.5rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-block-end: var(--e-4);
+  }
+  .sub {
+    font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+    color: var(--cor-papel);
+    max-inline-size: 56ch;
+  }
+  .secao {
+    padding-block: var(--e-12) var(--e-16);
+  }
+  .form-grade {
+    display: grid;
+    gap: var(--e-12);
+  }
+  @media (min-width: 64rem) {
+    .form-grade {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: var(--e-16);
+      align-items: start;
+    }
+  }
+  h2 {
+    font-size: var(--t-h2);
+    letter-spacing: -0.02em;
+    margin-block-end: var(--e-6);
+  }
+
+  .aviso-estado,
+  .pendente {
+    padding: var(--e-6);
+    background: var(--cor-superficie);
+    border-inline-start: 3px solid var(--cor-acento);
+    margin-block-end: var(--e-8);
+  }
+  .pendente {
+    border-inline-start-color: var(--cor-linha-escopo);
+  }
+  .aviso-tit {
+    font-family: var(--fonte-display);
+    font-size: var(--t-h3);
+    font-weight: 700;
+    margin-block-end: var(--e-3);
+  }
+  .aviso-estado p,
+  .pendente p {
+    font-size: var(--t-base);
+  }
+  .pendente p + p {
+    margin-block-start: var(--e-3);
+  }
+  .pendente-ref {
+    color: var(--cor-tinta-fraca);
+    font-size: var(--t-rotulo);
+  }
+
+  .form {
+    display: grid;
+    gap: var(--e-6);
+    max-inline-size: 44rem;
+  }
+  .campo {
+    display: grid;
+    gap: var(--e-2);
+  }
+  label {
+    font-size: var(--t-base);
+    font-weight: 600;
+    color: var(--cor-tinta);
+  }
+  .opcional {
+    font-weight: 400;
+    color: var(--cor-tinta-fraca);
+  }
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: var(--t-base);
+    color: var(--cor-tinta);
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-linha-escopo);
+    border-radius: var(--raio-acao);
+    padding: var(--e-3);
+    min-block-size: var(--toque-acao);
+
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+  .campo,
+  .form {
+    min-inline-size: 0;
+  }
+  textarea {
+    resize: vertical;
+  }
+  input:disabled,
+  select:disabled,
+  textarea:disabled {
+    background: var(--cor-realce);
+    color: var(--cor-tinta-desabilitada);
+    border-style: dashed;
+    cursor: not-allowed;
+  }
+  .ajuda {
+    font-size: var(--t-rotulo);
+    color: var(--cor-tinta-fraca);
+  }
+  button:disabled {
+    background: var(--cor-tinta-desabilitada);
+    cursor: not-allowed;
+  }
+  .nota-privacidade {
+    font-size: var(--t-rotulo);
+    color: var(--cor-tinta-fraca);
+    max-inline-size: 60ch;
+  }
+
+  .armadilha {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .lado {
+    background: var(--cor-escuro);
+    color: var(--cor-papel);
+    padding: var(--e-8);
+  }
+  @media (min-width: 64rem) {
+    .lado {
+      padding: var(--e-12);
+      position: sticky;
+      inset-block-start: var(--e-16);
+    }
+  }
+  .lado :global(h2) {
+    color: var(--cor-papel);
+  }
+  .lado h3 {
+    font-size: var(--t-h3);
+    margin-block: var(--e-8) var(--e-3);
+  }
+  .lado-txt {
+    font-size: var(--t-base);
+    color: var(--cor-papel);
+  }
+  .canais {
+    display: grid;
+    gap: var(--e-4);
+    margin-block-end: var(--e-6);
+  }
+  .canal-rot {
+    display: block;
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-acento-sobre-escuro);
+    margin-block-end: var(--e-1);
+  }
+  .canais a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--toque-min);
+    font-size: var(--t-p);
+    color: var(--cor-papel);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    overflow-wrap: anywhere;
+  }
+  .canais a:hover {
+    color: var(--cor-acento-sobre-escuro);
+  }
+  .canais-nota {
+    font-size: var(--t-base);
+    color: var(--cor-acento-sobre-escuro);
+  }
+
+  .form-nota {
+    margin-block-end: var(--e-6);
+    font-size: var(--t-base);
+    color: var(--cor-tinta-fraca);
+  }
+</style>

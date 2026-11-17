@@ -1,0 +1,156 @@
+---
+import Base from "../layouts/Base.astro";
+import Logo from "../components/Logo.astro";
+import { paginasServico } from "../content/servicos";
+
+const rotas = [
+  { href: "/", nome: "Início", nota: "As três frentes e como trabalhamos" },
+  ...paginasServico.map((s) => ({
+    href: `/servicos/${s.slug}/`,
+    nome: s.titulo,
+    nota: s.escopo.quandoProcurar[0],
+  })),
+  {
+    href: "/contato/",
+    nome: "Contato",
+    nota: "Conte o que sua empresa precisa",
+  },
+];
+---
+<Base
+  titulo="Página não encontrada | iTech Soluções Digitais"
+  descricao="A página procurada não existe. Veja os caminhos disponíveis."
+  naoIndexar={true}
+>
+  <header class="topo faixa em-escuro">
+    <div class="limite">
+      <a href="/" class="marca"><Logo altura={26} /></a>
+    </div>
+  </header>
+
+  <main id="conteudo" class="faixa em-escuro">
+    <div class="limite">
+      <p class="codigo" aria-hidden="true">404</p>
+      <h1>Esta página não existe</h1>
+      <p class="sub">
+        Duas causas prováveis: o endereço perdeu a barra final, ou a página
+        existia numa versão anterior e saiu. O site usa a barra final como
+        forma canônica, então <code>/contato/</code> funciona e
+        <code>/contato</code> não.
+      </p>
+
+      <h2 id="h2-rotas">Caminhos disponíveis</h2>
+      <ul class="rotas" aria-labelledby="h2-rotas">
+        {
+          rotas.map((r) => (
+            <li>
+              <a href={r.href}>{r.nome}</a>
+              <span>{r.nota}</span>
+              <code>{r.href}</code>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </main>
+
+  <style is:global>
+    body {
+      background: var(--cor-escuro);
+    }
+  </style>
+
+  <style>
+    .topo {
+      background: var(--cor-escuro);
+      padding-block: var(--e-4);
+    }
+    .marca {
+      display: inline-flex;
+      color: var(--cor-papel);
+      text-decoration: none;
+
+      --logo-marca: #ffffff;
+      --logo-complemento: #c9cbd1;
+    }
+    main {
+      background: var(--cor-escuro);
+      color: var(--cor-papel);
+      padding-block: var(--e-16) var(--e-24);
+      min-block-size: 72svh;
+    }
+    .codigo {
+      font-family: var(--fonte-display);
+      font-size: clamp(5rem, 2rem + 16vw, 14rem);
+      font-weight: 700;
+      line-height: 0.8;
+      letter-spacing: -0.05em;
+      color: transparent;
+      -webkit-text-stroke: 2px var(--cor-acento-sobre-escuro);
+      margin-block-end: var(--e-6);
+    }
+    @supports not (-webkit-text-stroke: 1px red) {
+      .codigo {
+        color: var(--cor-acento-sobre-escuro);
+      }
+    }
+    h1 {
+      font-size: clamp(2rem, 1.2rem + 3.5vw, 3.75rem);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-block-end: var(--e-6);
+    }
+    .sub {
+      color: var(--cor-papel);
+      font-size: var(--t-p);
+      max-inline-size: 58ch;
+      margin-block-end: var(--e-16);
+    }
+    code {
+      font-family: ui-monospace, monospace;
+      font-size: 0.9em;
+    }
+    h2 {
+      font-size: var(--t-rotulo);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cor-acento-sobre-escuro);
+      margin-block-end: var(--e-6);
+    }
+    .rotas {
+      display: grid;
+    }
+    .rotas li {
+      display: grid;
+      gap: var(--e-2);
+      padding-block: var(--e-4);
+      border-block-end: 1px solid rgb(168 194 240 / 0.22);
+    }
+    @media (min-width: 52rem) {
+      .rotas li {
+        grid-template-columns: minmax(0, 16rem) minmax(0, 1fr) minmax(0, 14rem);
+        gap: var(--e-6);
+        align-items: baseline;
+      }
+    }
+    .rotas a {
+      font-family: var(--fonte-display);
+      font-size: var(--t-h3);
+      font-weight: 700;
+      color: var(--cor-papel);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    .rotas a:hover {
+      color: var(--cor-acento-sobre-escuro);
+    }
+    .rotas span {
+      color: var(--cor-papel);
+      font-size: var(--t-base);
+    }
+    .rotas code {
+      color: var(--cor-acento-sobre-escuro);
+    }
+  </style>
+</Base>

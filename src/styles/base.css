@@ -1,0 +1,317 @@
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("/fonts/schibsted-grotesk.woff2") format("woff2-variations");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("/fonts/instrument-sans.woff2") format("woff2-variations");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-block-start: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--cor-papel);
+  color: var(--cor-tinta);
+  font-family: var(--fonte-texto);
+  font-size: var(--t-base);
+  line-height: 1.6;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-display);
+  line-height: 1.05;
+  margin: 0;
+  text-wrap: balance;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+h1 {
+  font-size: var(--t-h1);
+}
+h2 {
+  font-size: var(--t-h2);
+}
+h3 {
+  font-size: var(--t-h3);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}
+
+p,
+li {
+  font-size: var(--t-p);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 3px;
+  border-radius: var(--raio-acao);
+}
+
+.em-escuro :focus-visible {
+  outline-color: var(--cor-foco-escuro);
+}
+
+.pular {
+  position: absolute;
+  inset-block-start: var(--e-2);
+  inset-inline-start: var(--e-2);
+  z-index: 100;
+  padding: var(--e-3) var(--e-4);
+  background: var(--cor-tinta);
+  color: var(--cor-papel);
+  font-size: var(--t-rotulo);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--m-rapido) var(--m-saida);
+}
+
+.pular:focus-visible {
+  transform: translateY(0);
+}
+
+.faixa {
+  padding-inline: var(--goteira);
+}
+
+.limite {
+  max-inline-size: var(--largura-max);
+  margin-inline: auto;
+}
+
+.prosa {
+  max-inline-size: var(--medida-texto);
+}
+
+.acao {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--toque-acao);
+  padding: var(--e-3) var(--e-6);
+  border: 0;
+  border-radius: var(--raio-acao);
+  background: var(--cor-acento);
+  color: #fff;
+  font-family: inherit;
+  font-size: var(--t-base);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--m-rapido) var(--m-saida),
+    transform var(--m-rapido) var(--m-saida);
+}
+
+.acao:hover {
+  background: var(--cor-acento-hover);
+}
+
+.acao:active {
+  background: var(--cor-acento-hover);
+  transform: scale(0.985);
+}
+
+.acao[aria-disabled="true"],
+.acao:disabled,
+.acao-2[aria-disabled="true"],
+.acao-2:disabled {
+  background: transparent;
+  color: var(--cor-tinta-desabilitada);
+  border: 1px dashed var(--cor-tinta-desabilitada);
+  cursor: not-allowed;
+  transform: none;
+  pointer-events: none;
+}
+
+.acao-2 {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--toque-acao);
+  padding: var(--e-3) var(--e-6);
+  border: 1px solid var(--cor-linha-escopo);
+  border-radius: var(--raio-acao);
+  background: transparent;
+  color: var(--cor-tinta);
+  font-family: inherit;
+  font-size: var(--t-base);
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color var(--m-rapido) var(--m-saida);
+}
+
+.acao-2:hover {
+  border-color: var(--cor-acento);
+  color: var(--cor-acento);
+}
+
+.acao-2:active {
+  transform: scale(0.985);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+
+    animation-timeline: none !important;
+  }
+}
+
+.acao-clara {
+  background: var(--cor-acento-sobre-escuro);
+  color: var(--cor-escuro);
+}
+.acao-clara:hover {
+  background: #fff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-msg > * {
+    animation: m-subir var(--m-lento) var(--m-saida) both;
+  }
+  .hero-msg > :nth-child(2) {
+    animation-delay: 60ms;
+  }
+  .hero-msg > :nth-child(3) {
+    animation-delay: 120ms;
+  }
+  .hero-msg > :nth-child(4) {
+    animation-delay: 180ms;
+  }
+
+  @supports (animation-timeline: view()) {
+    .cabeca,
+    .linhas > li,
+    .processo > li,
+    .frente {
+      animation-name: m-entrar;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 20%;
+    }
+
+    .processo-n {
+      animation-name: m-numero;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 35%;
+    }
+
+    .linhas > li .marca {
+      animation-name: m-marcador;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 26%;
+    }
+  }
+}
+
+@keyframes m-subir {
+  from {
+    translate: 0 0.75rem;
+  }
+}
+@keyframes m-entrar {
+  from {
+    translate: 0 1.5rem;
+  }
+}
+@keyframes m-marcador {
+  from {
+    opacity: 0;
+    translate: -1rem 0;
+  }
+}
+@keyframes m-numero {
+  from {
+    translate: 0 1rem;
+    scale: 0.9;
+  }
+}
+
+.acao,
+.acao-2 {
+  transition:
+    background-color var(--m-rapido) var(--m-saida),
+    color var(--m-rapido) var(--m-saida),
+    translate var(--m-rapido) var(--m-saida);
+}
+.acao:active,
+.acao-2:active {
+  translate: 0 1px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .acao,
+  .acao-2 {
+    transition: none;
+  }
+  .acao:active,
+  .acao-2:active {
+    translate: none;
+  }
+}
+
+.acao-2-clara {
+  border-color: var(--cor-acento-sobre-escuro);
+  color: var(--cor-acento-sobre-escuro);
+}
+.acao-2-clara:hover {
+  background: var(--cor-acento-sobre-escuro);
+  color: var(--cor-escuro);
+}

@@ -1,0 +1,80 @@
+---
+import Site from "../../layouts/Site.astro";
+import { empresa } from "../../content/itech";
+
+interface Props {
+  titulo: string;
+  rotulo: string;
+  h1: string;
+  texto: string;
+  detalhe?: string;
+  tom?: "ok" | "atencao";
+}
+const { titulo, rotulo, h1, texto, detalhe, tom = "atencao" } = Astro.props;
+---
+<Site
+  titulo={`${titulo} | ${empresa.nome}`}
+  descricao={texto}
+  atual="/contato/"
+  naoIndexar={true}
+>
+  <section class="retorno faixa" aria-labelledby="h1">
+    <div class="limite">
+      <p class="rotulo">{rotulo}</p>
+      <h1 id="h1">{h1}</h1>
+      <div class={`caixa ${tom === "ok" ? "caixa-ok" : ""}`}>
+        <p>{texto}</p>
+        {detalhe && <p class="detalhe">{detalhe}</p>}
+      </div>
+      <div class="acoes">
+        <a class="acao" href="/contato/">Voltar ao formulário</a>
+        <a class="acao-2" href="/">Ir para a página inicial</a>
+      </div>
+    </div>
+  </section>
+</Site>
+
+<style>
+  .retorno {
+    padding-block: var(--e-24);
+    min-block-size: 50vh;
+  }
+  .rotulo {
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-tinta-fraca);
+    margin-block-end: var(--e-4);
+  }
+  h1 {
+    font-size: clamp(2rem, 1.2rem + 3.5vw, 3.5rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-block-end: var(--e-8);
+    max-inline-size: 20ch;
+  }
+  .caixa {
+    padding: var(--e-6);
+    background: var(--cor-superficie);
+    border-inline-start: 3px solid var(--cor-linha-escopo);
+    max-inline-size: 72ch;
+    margin-block-end: var(--e-8);
+  }
+  .caixa-ok {
+    border-inline-start-color: var(--cor-acento);
+  }
+  .caixa p {
+    font-size: var(--t-p);
+  }
+  .detalhe {
+    margin-block-start: var(--e-4);
+    color: var(--cor-tinta-fraca);
+    font-size: var(--t-base) !important;
+  }
+  .acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--e-4);
+  }
+</style>

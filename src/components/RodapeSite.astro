@@ -1,0 +1,147 @@
+---
+import Logo from "./Logo.astro";
+import { empresa, contato, linkWhatsapp } from "../content/itech";
+import { paginasServico } from "../content/servicos";
+
+const ano = new Date().getFullYear();
+---
+<footer class="rodape faixa em-escuro">
+  <div class="limite rodape-grade">
+    <div class="rodape-marca">
+      <Logo altura={28} />
+      <p class="rodape-local">{empresa.cidade}, {empresa.uf}</p>
+    </div>
+
+    <nav aria-labelledby="rod-servicos">
+      <p class="rodape-tit" id="rod-servicos">Serviços</p>
+      <ul>
+        {
+          paginasServico.map((s) => (
+            <li>
+              <a href={`/servicos/${s.slug}/`}>{s.titulo}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="rod-site">
+      <p class="rodape-tit" id="rod-site">Site</p>
+      <ul>
+        <li><a href="/">Início</a></li>
+        <li><a href="/contato/">Contato</a></li>
+        <li><a href="/privacidade/">Privacidade</a></li>
+      </ul>
+    </nav>
+
+    <div class="rodape-canais">
+      <p class="rodape-tit" id="rod-canais">Falar com a iTech</p>
+      <ul>
+        <li><a href={`mailto:${contato.email}`}>{contato.email}</a></li>
+        <li>
+          <a href={linkWhatsapp} rel="noopener">
+            WhatsApp {contato.whatsapp}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="limite rodape-base">
+    <p>© {ano} {empresa.nome}</p>
+    <p class="rodape-nota">{empresa.cidade}, {empresa.uf}</p>
+  </div>
+</footer>
+
+<style>
+  .rodape {
+    background: var(--cor-escuro);
+    color: var(--cor-papel);
+    padding-block: var(--e-16) var(--e-8);
+  }
+  .rodape-grade {
+    display: grid;
+    gap: var(--e-8);
+    padding-block-end: var(--e-8);
+  }
+  @media (min-width: 48rem) {
+    .rodape-grade {
+      grid-template-columns:
+        minmax(0, 1.2fr) minmax(0, 1fr)
+        minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: var(--e-12);
+    }
+  }
+  .rodape-canais ul {
+    display: grid;
+    gap: var(--e-1);
+  }
+  .rodape-canais a {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--toque-min);
+    padding-block: var(--e-1);
+    font-size: var(--t-base);
+    color: var(--cor-papel);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .rodape-canais a:hover {
+    color: var(--cor-acento-sobre-escuro);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .rodape-marca {
+    --logo-marca: #ffffff;
+    --logo-complemento: #c9cbd1;
+  }
+  .rodape-local {
+    margin-block-start: var(--e-2);
+    font-size: var(--t-base);
+    color: var(--cor-acento-sobre-escuro);
+  }
+  .rodape-tit {
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-acento-sobre-escuro);
+    padding-block-end: var(--e-3);
+    border-block-end: 1px solid var(--cor-linha-escopo);
+    margin-block-end: var(--e-3);
+  }
+  .rodape nav ul {
+    display: grid;
+    gap: var(--e-1);
+  }
+  .rodape nav a {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--toque-min);
+    padding-block: var(--e-1);
+    font-size: var(--t-base);
+    color: var(--cor-papel);
+    text-decoration: none;
+  }
+  .rodape nav a:hover {
+    color: var(--cor-acento-sobre-escuro);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .rodape-base {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--e-3);
+    padding-block-start: var(--e-6);
+    border-block-start: 1px solid var(--cor-linha-escopo);
+  }
+  .rodape-base p {
+    font-size: var(--t-rotulo);
+    color: var(--cor-acento-sobre-escuro);
+  }
+  .rodape-nota {
+    font-weight: 600;
+  }
+</style>

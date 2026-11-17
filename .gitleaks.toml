@@ -1,0 +1,14 @@
+[extend]
+useDefault = true
+
+# Só os valores fictícios dos arquivos de exemplo e de teste, pelo texto
+# exato. Um segredo real colocado nesses mesmos arquivos continua sendo
+# acusado.
+[allowlist]
+description = "Valores fictícios de config/contato.exemplo.php e ferramentas/teste/"
+regexes = [
+  '''TROQUE-ESTE-VALOR-NO-SERVIDOR''',
+  '''TROQUE-POR-UMA-STRING-ALEATORIA-LONGA''',
+  '''VALOR-DE-TESTE-SEM-USO''',
+  '''segredo-fixo-de-teste-nao-use-em-producao-0000''',
+]

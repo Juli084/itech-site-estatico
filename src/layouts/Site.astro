@@ -1,0 +1,29 @@
+---
+import Base from "./Base.astro";
+import CabecalhoSite from "../components/CabecalhoSite.astro";
+import RodapeSite from "../components/RodapeSite.astro";
+
+interface Props {
+  titulo: string;
+  descricao: string;
+  atual?: string;
+  naoIndexar?: boolean;
+  dadosEstruturados?: Record<string, unknown>;
+}
+
+const { titulo, descricao, atual, naoIndexar = false, dadosEstruturados } = Astro.props;
+
+const rota = atual ?? Astro.url.pathname;
+---
+<Base
+  titulo={titulo}
+  descricao={descricao}
+  naoIndexar={naoIndexar}
+  dadosEstruturados={dadosEstruturados}
+>
+  <CabecalhoSite atual={rota} />
+  <main id="conteudo">
+    <slot />
+  </main>
+  <RodapeSite />
+</Base>

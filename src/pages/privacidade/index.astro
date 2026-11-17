@@ -1,0 +1,287 @@
+---
+import Site from "../../layouts/Site.astro";
+import { empresa, contato } from "../../content/itech";
+
+const campos = [
+  ["Nome", "Para saber como chamar você na resposta."],
+  ["E-mail", "Para responder. É o canal principal."],
+  ["Telefone", "Opcional. Só se você preferir resposta por telefone."],
+  ["Serviço de interesse", "Para a resposta já vir de quem cuida do assunto."],
+  ["Mensagem", "O que você escrever sobre a necessidade da empresa."],
+];
+
+const pendencias = [
+  {
+    o: "Encarregado de proteção de dados",
+    t: "Quem é o encarregado, se houver. Enquanto não houver, os pedidos chegam pelo e-mail indicado acima, que já está publicado e em uso.",
+  },
+];
+---
+<Site
+  titulo={`Privacidade | ${empresa.nome}`}
+  descricao="Quais dados o formulário de contato coleta, para que servem, para onde vão e como pedir acesso, correção ou eliminação."
+  atual="/privacidade/"
+>
+  <section class="topo-pag faixa" aria-labelledby="h1">
+    <div class="limite">
+      <p class="rotulo">Privacidade</p>
+      <h1 id="h1">O que fazemos<br />com os seus dados</h1>
+      <p class="sub">
+        Este aviso cobre apenas o formulário de contato deste site. O que ainda
+        não está definido está dito no fim, com nome e motivo.
+      </p>
+    </div>
+  </section>
+
+  <section class="faixa secao" aria-labelledby="h2-oque">
+    <div class="limite corpo">
+      <h2 id="h2-oque">Quais dados são coletados</h2>
+      <p>
+        Apenas o que você digitar no formulário de contato. Não há cadastro, não
+        há área logada e não há compra.
+      </p>
+      <dl class="campos">
+        {
+          campos.map(([nome, pra]) => (
+            <div>
+              <dt>{nome}</dt>
+              <dd>{pra}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <h2>O que o site NÃO faz</h2>
+      <ul class="nao">
+        <li>Não usa cookies de publicidade nem de redes sociais.</li>
+        <li>Não instala Google Analytics, Tag Manager ou pixel de rastreio.</li>
+        <li>Não compartilha nem vende dados a terceiros.</li>
+        <li>Não cria perfil de comportamento de quem visita.</li>
+        <li>
+          Não coloca dado pessoal em endereço de página, em registro de servidor
+          nem em armazenamento do navegador.
+        </li>
+        <li>Não guarda os contatos em banco de dados.</li>
+      </ul>
+
+      <h2>Por que podemos tratar esses dados</h2>
+      <p>
+        Você preencheu o formulário pedindo um contato. Tratamos os seus dados
+        para responder a esse pedido e conduzir a conversa que vier dele, o que
+        a LGPD prevê como procedimento preliminar a um possível contrato.
+      </p>
+      <p>
+        Não pedimos a sua autorização numa caixa de aceite porque a finalidade
+        é exatamente aquela que você solicitou. Também não usamos esses dados
+        para enviar nada que você não tenha pedido.
+      </p>
+
+      <h2>Para onde a mensagem vai</h2>
+      <p>
+        A mensagem é enviada do site para uma caixa de e-mail da própria iTech, e
+        é respondida de lá. Não passa por serviço de terceiro.
+      </p>
+      <p>
+        O destino é <a href={`mailto:${contato.email}`}>{contato.email}</a>,
+        caixa da própria iTech.
+      </p>
+
+      <h2>Por quanto tempo guardamos</h2>
+      <p>
+        Enquanto a conversa estiver em andamento, os dados ficam guardados para
+        que seja possível responder e levar o atendimento adiante.
+      </p>
+      <p>
+        Se o contato se encerrar sem contratação, os dados são eliminados
+        quando deixam de ser necessários para essa finalidade. Não guardamos
+        uma mensagem por tempo indefinido só porque a pessoa talvez volte.
+      </p>
+      <p>
+        Essa verificação é feita <b>duas vezes por ano</b>. Em cada passagem, as
+        mensagens que não correspondem a uma conversa em andamento nem a um
+        contrato são apagadas da caixa de entrada, dos enviados e da lixeira.
+      </p>
+      <p>
+        Havendo contratação, ficam guardados os registros necessários para
+        cumprir as obrigações daquele contrato, pelo tempo necessário a isso.
+      </p>
+
+      <h2>Seus direitos</h2>
+      <p>
+        A LGPD garante a você, entre outros, o direito de confirmar a existência
+        do tratamento, acessar os dados, corrigir dado incompleto ou
+        desatualizado, e pedir a eliminação.
+      </p>
+      <p>
+        Para exercer qualquer um deles, escreva para
+        <a href={`mailto:${contato.email}`}>{contato.email}</a>. É o mesmo
+        endereço que recebe as mensagens do site.
+      </p>
+
+      <h2 id="h2-pend">O que ainda não está definido</h2>
+      <p>
+        Está aqui em vez de escondido porque documento legal com buraco
+        escondido é armadilha, e com buraco visível é trabalho em andamento.
+      </p>
+      <ul class="pend">
+        {
+          pendencias.map((p) => (
+            <li>
+              <p class="pend-cab">{p.o}</p>
+              <p>{p.t}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Site>
+
+<style>
+  .topo-pag {
+    padding-block: var(--e-16) var(--e-12);
+  }
+  .rotulo {
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-tinta-fraca);
+    margin-block-end: var(--e-4);
+  }
+  h1 {
+    font-size: clamp(2.25rem, 1.2rem + 4.2vw, 4rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-block-end: var(--e-6);
+  }
+  .sub {
+    font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+    color: var(--cor-tinta-fraca);
+    max-inline-size: 60ch;
+    margin-block-end: var(--e-8);
+  }
+  .aviso {
+    padding: var(--e-6);
+    background: var(--cor-superficie);
+    border-inline-start: 3px solid var(--cor-acento);
+    max-inline-size: 80ch;
+  }
+  .aviso p {
+    font-size: var(--t-base);
+  }
+  .secao {
+    padding-block: var(--e-12) var(--e-16);
+  }
+  .corpo {
+    max-inline-size: 76ch;
+    display: grid;
+    gap: var(--e-4);
+    counter-reset: secao;
+    min-inline-size: 0;
+  }
+  .corpo a {
+    overflow-wrap: anywhere;
+  }
+  .corpo h2 {
+    font-size: var(--t-h2);
+    letter-spacing: -0.02em;
+    margin-block-start: var(--e-16);
+    counter-increment: secao;
+  }
+  .corpo > h2:first-child {
+    margin-block-start: 0;
+  }
+  .corpo h2::before {
+    content: counter(secao, decimal-leading-zero);
+    display: block;
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--cor-acento);
+    margin-block-end: var(--e-2);
+  }
+  @media (min-width: 64rem) {
+    .corpo {
+      grid-template-columns: 4.5rem minmax(0, 68ch);
+      column-gap: var(--e-6);
+      max-inline-size: none;
+    }
+    .corpo > * {
+      grid-column: 2;
+    }
+    .corpo > h2 {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: subgrid;
+      column-gap: var(--e-6);
+    }
+    .corpo h2::before {
+      grid-column: 1;
+      margin-block: 0;
+      align-self: start;
+      text-align: end;
+    }
+  }
+  .campos {
+    display: grid;
+    gap: 0;
+  }
+  .campos > div {
+    display: grid;
+    gap: var(--e-1);
+    padding-block: var(--e-3);
+    border-block-end: 1px solid var(--cor-linha-ornamento);
+  }
+  @media (min-width: 44rem) {
+    .campos > div {
+      grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+      gap: var(--e-6);
+      align-items: baseline;
+    }
+  }
+  .campos dt {
+    font-weight: 700;
+    font-size: var(--t-base);
+  }
+  .campos dd {
+    color: var(--cor-tinta-fraca);
+    font-size: var(--t-base);
+  }
+  .nao {
+    display: grid;
+    gap: var(--e-3);
+  }
+  .nao li {
+    padding-inline-start: var(--e-6);
+    border-inline-start: 3px solid var(--cor-acento);
+    font-size: var(--t-base);
+  }
+  .marca-pendencia {
+    padding: var(--e-4);
+    background: var(--cor-superficie);
+    border-inline-start: 3px solid var(--cor-linha-escopo);
+    font-size: var(--t-base);
+  }
+  .pend {
+    display: grid;
+    gap: var(--e-6);
+  }
+  .pend li {
+    padding-block-start: var(--e-4);
+    border-block-start: 1px solid var(--cor-linha-ornamento);
+  }
+  .pend-cab {
+    font-family: var(--fonte-display);
+    font-weight: 700;
+    font-size: var(--t-h3);
+    margin-block-end: var(--e-2);
+  }
+  .pend-q {
+    color: var(--cor-acento);
+  }
+  .pend li p:last-child {
+    font-size: var(--t-base);
+    color: var(--cor-tinta-fraca);
+  }
+</style>

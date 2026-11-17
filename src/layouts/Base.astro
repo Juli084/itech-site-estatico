@@ -1,0 +1,102 @@
+---
+import "../styles/tokens.css";
+import "../styles/base.css";
+import "../styles/composicao.css";
+import { textoCartaoCompartilhamento } from "../content/itech";
+
+interface Props {
+  titulo: string;
+  descricao: string;
+  descricaoCartao?: string;
+  tipo?: "grotesca-archivo" | "editorial" | "padrao";
+  naoIndexar?: boolean;
+  preload?: string;
+  dadosEstruturados?: Record<string, unknown>;
+}
+
+const {
+  titulo,
+  descricao,
+  descricaoCartao = textoCartaoCompartilhamento,
+  tipo = "padrao",
+  naoIndexar = false,
+  preload = "/fonts/schibsted-grotesk.woff2",
+  dadosEstruturados,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const imagemCartao = new URL("/compartilhar.jpg", Astro.site).href;
+
+import logotipoBruto from "../imagens/logotipo.svg?raw";
+const conteudoLogotipo = logotipoBruto.slice(
+  logotipoBruto.indexOf(">") + 1,
+  logotipoBruto.lastIndexOf("</svg>"),
+);
+---
+<!doctype html>
+<html lang="pt-BR" data-tipo={tipo}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={canonical} />
+    {naoIndexar && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="generator" content={Astro.generator} />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="iTech Soluções Digitais" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricaoCartao} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imagemCartao} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta
+      property="og:image:alt"
+      content="Assinatura da iTech Soluções Digitais ao lado do site aberto em computador e celular, com as três frentes: desenvolvimento web, cibersegurança e tráfego pago."
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preload" href={preload} as="font" type="font/woff2" crossorigin />
+
+    {
+      dadosEstruturados && (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(dadosEstruturados).replace(/</g, "\\u003c")}
+        />
+      )
+    }
+  </head>
+
+  <body>
+    <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+    <svg
+      class="sprite-marca"
+      aria-hidden="true"
+      focusable="false"
+      set:html={`<defs><g id="marca-itech">${conteudoLogotipo}</g></defs>`}
+    />
+
+    <slot />
+
+    <style>
+      .sprite-marca {
+        position: absolute;
+        inline-size: 0;
+        block-size: 0;
+        overflow: hidden;
+      }
+    </style>
+  </body>
+</html>

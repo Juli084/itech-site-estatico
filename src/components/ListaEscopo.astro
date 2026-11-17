@@ -1,0 +1,166 @@
+---
+import type { ItemOferta } from "../content/servicos";
+
+interface Props {
+  inclui: readonly (string | ItemOferta)[];
+  naoInclui: readonly string[];
+}
+const { inclui, naoInclui } = Astro.props;
+
+const ehPar = (i: string | ItemOferta): i is ItemOferta =>
+  typeof i !== "string";
+---
+<div class="balanca">
+  <section class="coluna dentro" aria-labelledby="rot-dentro">
+    <h3 id="rot-dentro" class="rot">Faz parte da oferta</h3>
+    <ul class="lista-dentro">
+      {
+        inclui.map((i) =>
+          ehPar(i) ? (
+            <li class="item-par">
+              <strong class="item-entrega">{i.entrega}</strong>
+              <p class="item-para">{i.para}</p>
+            </li>
+          ) : (
+            <li>{i}</li>
+          ),
+        )
+      }
+    </ul>
+  </section>
+
+  <span class="regua" aria-hidden="true"></span>
+
+  <section class="coluna fora" aria-labelledby="rot-fora">
+    <h3 id="rot-fora" class="rot rot-fora">Não faz parte desta oferta</h3>
+    <ul class="lista-fora">
+      {
+        naoInclui.map((i) => (
+          <li>
+            <span class="conector" aria-hidden="true" />
+            <span>{i}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</div>
+
+<style>
+  .balanca {
+    display: grid;
+    gap: var(--e-12);
+  }
+  @media (min-width: 64rem) {
+    .balanca {
+      grid-template-columns: minmax(0, 1fr) 3rem minmax(0, 1fr);
+      gap: 0;
+      align-items: start;
+    }
+  }
+  .rot {
+    font-family: var(--fonte-texto);
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-block-end: var(--e-6);
+  }
+  .rot-fora {
+    color: var(--cor-tinta-fraca);
+  }
+
+  .dentro {
+    padding-inline-start: var(--e-6);
+    border-inline-start: 3px solid var(--cor-acento);
+  }
+  .lista-dentro {
+    display: grid;
+    gap: var(--e-4);
+  }
+  .lista-dentro li {
+    font-size: var(--t-p);
+    font-weight: 600;
+  }
+
+  .item-par + .item-par {
+    margin-block-start: var(--e-2);
+  }
+  .item-entrega {
+    display: block;
+    font-size: var(--t-p);
+    font-weight: 700;
+  }
+  .item-para {
+    margin-block-start: var(--e-1);
+    font-size: var(--t-rotulo);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--cor-tinta-fraca);
+  }
+
+  .regua {
+    display: none;
+  }
+  @media (min-width: 64rem) {
+    .regua {
+      display: block;
+      justify-self: center;
+      inline-size: 1px;
+      block-size: 100%;
+      background: var(--cor-linha-ornamento);
+      transform-origin: top center;
+    }
+  }
+
+  .lista-fora {
+    display: grid;
+    gap: var(--e-4);
+  }
+  .lista-fora li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--e-3);
+    font-size: var(--t-p);
+    color: var(--cor-tinta-fraca);
+  }
+  .conector {
+    flex: none;
+    inline-size: var(--e-6);
+    block-size: 2px;
+    background: var(--cor-linha-escopo);
+    transform-origin: left center;
+    translate: 0 -0.3em;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .regua {
+        animation-name: e-estender;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+      .lista-fora li .conector {
+        animation-name: e-cortar;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 90%;
+      }
+    }
+  }
+  @keyframes e-estender {
+    from {
+      transform: scaleY(0);
+    }
+  }
+  @keyframes e-cortar {
+    from {
+      transform: scaleX(0);
+    }
+  }
+</style>

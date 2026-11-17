@@ -1,0 +1,129 @@
+# iTech Soluções Digitais: configuração do Apache (hospedagem compartilhada)
+#
+# Cada bloco fica dentro de <IfModule>. Em hospedagem compartilhada, uma
+# diretiva de módulo ausente derruba o site inteiro com erro 500, o que é
+# pior do que faltar um cabeçalho.
+#
+# Módulo habilitado não garante que a diretiva tenha efeito. Depois de
+# publicar, confira a resposta real do servidor (curl -I) antes de dar um
+# cabeçalho como ativo.
+
+
+# Sem índice automático: pasta sem index.html não lista os arquivos.
+Options -Indexes
+
+
+# Arquivos que nunca devem ser servidos. Nenhum deles faz parte do pacote
+# publicado; a regra existe para o dia em que um for enviado por engano.
+# `error_log` (sem ponto) é o nome que o PHP usa por padrão e expõe
+# caminhos absolutos e versões de bibliotecas.
+<FilesMatch "(^\.|~$|^error_log$|_log$|\.(bak|old|orig|save|swp|log|sql|ini|env|yml|yaml|lock|md|sh)$)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+<Files ".htaccess">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</Files>
+
+# Nenhum arquivo .php executa na raiz. O único endpoint fica em api/ e é
+# liberado pelo .htaccess daquela pasta.
+<FilesMatch "\.php$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+
+# Forma canônica: HTTPS, sem www e com barra final (a mesma declarada em
+# astro.config.mjs). Sem isso, o mesmo conteúdo responde em quatro
+# endereços. Só publique este bloco com o certificado já ativo.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://itechsolucoesdigitais.com/$1 [R=301,L]
+
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+</IfModule>
+
+
+# Página de erro com status 404 de verdade, não 200 com cara de erro.
+ErrorDocument 404 /404.html
+
+
+# Compressão declarada por tipo. Imagens e woff2 já chegam comprimidos.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+
+# Cache: arquivos em /_astro/ têm hash no nome e podem ficar guardados por
+# um ano. HTML não tem hash e precisa ser revalidado a cada visita.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 hour"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|avif|webp|jpe?g|png|woff2|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+
+# Cabeçalhos de segurança.
+#
+# O build não gera script em linha, manipulador de evento em atributo nem
+# recurso de outra origem (conferido nas 11 páginas publicadas). Por isso
+# script-src fica só em 'self', sem 'unsafe-inline'.
+#
+# style-src precisa de 'unsafe-inline': duas páginas passam a URL da foto
+# de topo por atributo style, porque o caminho com hash é gerado no build.
+# O risco é baixo: injetar CSS exige um ponto de injeção de HTML, e o site
+# não exibe conteúdo enviado por visitantes.
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; connect-src 'self'"
+
+  # HSTS fica de fora até o HTTPS estar estável por algumas semanas. Depois
+  # que o navegador recebe esse cabeçalho, ele recusa HTTP pelo prazo
+  # definido, e parar de enviá-lo não desfaz isso: um erro aqui deixa o
+  # site inacessível para quem já visitou. O plano é começar com um dia:
+  # Header always set Strict-Transport-Security "max-age=86400"
+</IfModule>

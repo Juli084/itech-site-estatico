@@ -1,0 +1,178 @@
+---
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  rotulo: string;
+  h1: string;
+  intro: string;
+  acaoTexto: string;
+  acaoHref: string;
+  ressalva?: string;
+  foto?: ImageMetadata;
+}
+
+const { rotulo, h1, intro, acaoTexto, acaoHref, ressalva, foto } = Astro.props;
+---
+<section class="abertura-tipo faixa" aria-labelledby="h1">
+  <div class="limite at-grade">
+    <div class="at-titulo">
+      <p class="at-rotulo">{rotulo}</p>
+      <h1 id="h1" set:html={h1} />
+    </div>
+
+    <div class="at-lado">
+      <p class="at-intro">{intro}</p>
+      <div class="at-acoes">
+        <a class="acao" href={acaoHref}>{acaoTexto}</a>
+        <a class="acao-2" href="#escopo">Ver o que entra e o que não entra</a>
+      </div>
+    </div>
+  </div>
+
+  {
+    foto && (
+      <div class="at-faixa">
+        <Picture
+          src={foto}
+          alt=""
+          widths={[760, 1100, 1500, 1960]}
+          sizes="100vw"
+          formats={["avif", "webp"]}
+          fallbackFormat="webp"
+          quality={60}
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    )
+  }
+
+  {
+    ressalva && (
+      <div class="limite at-ressalva">
+        <p class="at-ressalva-rot">Antes de qualquer coisa</p>
+        <p class="at-ressalva-txt">{ressalva}</p>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .abertura-tipo {
+    background: var(--cor-realce);
+    color: var(--cor-tinta);
+    padding-block: var(--e-24) 0;
+  }
+
+  .at-grade {
+    display: grid;
+    gap: var(--e-8);
+    padding-block-end: var(--e-16);
+  }
+  @media (min-width: 64rem) {
+    .at-grade {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: var(--e-16);
+      align-items: end;
+    }
+  }
+
+  .at-rotulo {
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-acento);
+    margin-block-end: var(--e-6);
+  }
+
+  h1 {
+    font-size: clamp(2rem, 1rem + 3.4vw, 3.5rem);
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+
+  .at-intro {
+    font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+    color: var(--cor-tinta);
+    max-inline-size: 46ch;
+    margin-block-end: var(--e-8);
+  }
+
+  .at-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--e-4);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .at-titulo,
+    .at-lado {
+      animation: at-subir var(--m-lento) var(--m-saida) both;
+    }
+    .at-lado {
+      animation-delay: 90ms;
+    }
+    .at-faixa :global(img) {
+      animation: at-abrir calc(var(--m-lento) * 1.5) var(--m-saida) both;
+      animation-delay: 160ms;
+    }
+  }
+  @keyframes at-subir {
+    from {
+      translate: 0 1rem;
+    }
+  }
+  @keyframes at-abrir {
+    from {
+      clip-path: inset(0 0 100% 0);
+      scale: 1.04;
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+      scale: 1;
+    }
+  }
+
+  .at-faixa {
+    margin-block-start: var(--e-8);
+    overflow: hidden;
+    margin-inline: calc(var(--goteira) * -1);
+  }
+  .at-faixa :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: clamp(11rem, 30vw, 24rem);
+    object-fit: cover;
+    object-position: center 62%;
+  }
+
+  .at-ressalva {
+    background: var(--cor-escuro);
+    color: var(--cor-papel);
+    padding: var(--e-12);
+    display: grid;
+    gap: var(--e-3);
+  }
+  @media (min-width: 52rem) {
+    .at-ressalva {
+      grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+      gap: var(--e-8);
+      align-items: start;
+      padding: var(--e-16);
+    }
+  }
+  .at-ressalva-rot {
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-acento-sobre-escuro);
+  }
+  .at-ressalva-txt {
+    font-size: clamp(1.0625rem, 1rem + 0.5vw, 1.375rem);
+    line-height: 1.45;
+    max-inline-size: 60ch;
+  }
+</style>

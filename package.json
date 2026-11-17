@@ -1,0 +1,30 @@
+{
+  "name": "itech-site-estatico",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Site institucional da iTech Soluções Digitais: Astro estático, com endpoint PHP para o formulário de contato.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.1"
+  },
+  "packageManager": "pnpm@10.11.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "typecheck": "tsc --noEmit",
+    "verificar": "node ferramentas/verificar-links.mjs && node ferramentas/verificar-sitemap.mjs && node ferramentas/auditar-seo.mjs && node ferramentas/medir-peso.mjs",
+    "testar:endpoint": "node ferramentas/testar-endpoint.mjs",
+    "publicacao": "node ferramentas/preparar-publicacao.mjs"
+  },
+  "dependencies": {
+    "astro": "7.3.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@astrojs/sitemap": "3.7.4",
+    "sharp": "0.35.5",
+    "typescript": "5.9.3"
+  }
+}

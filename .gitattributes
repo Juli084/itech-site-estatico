@@ -1,0 +1,8 @@
+# Arquivos que vão para o servidor ficam sempre em LF, inclusive em clones
+# no Windows. No .htaccess, um CR no fim da linha entra no valor da
+# diretiva, e uma diretiva malformada derruba o site inteiro com erro 500.
+.htaccess       text eol=lf
+*.htaccess      text eol=lf
+*.php           text eol=lf
+
+* text=auto

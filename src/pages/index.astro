@@ -1,0 +1,591 @@
+---
+import Site from "../layouts/Site.astro";
+import { getImage } from "astro:assets";
+import fotoHero from "../imagens/marcador-home.jpg";
+import { empresa, frentes, comoTrabalhamos, compromissos, diferenciais, organizacaoJsonLd } from "../content/itech";
+import { perguntas } from "../content/servicos";
+
+const heroAvif = await getImage({
+  src: fotoHero,
+  format: "avif",
+  width: 1600,
+  quality: 62,
+});
+
+const situacoes = [
+  "O site existe, mas não traz contato nenhum",
+  "Ninguém sabe dizer se a empresa está protegida",
+  "A verba de anúncio sai, e o retorno ninguém mede",
+  "Cada problema cai num fornecedor diferente, que não fala com o outro",
+];
+---
+<Site
+  titulo="Desenvolvimento web, cibersegurança e tráfego pago | iTech"
+  descricao={`Atendimento presencial em ${empresa.cidade} e remoto para todo o Brasil. O que entra e o que fica de fora é combinado por escrito antes do trabalho começar.`}
+  atual="/"
+  dadosEstruturados={organizacaoJsonLd}
+>
+  <section
+    class="hero faixa em-escuro"
+    aria-labelledby="h1"
+    style={`--hero-foto: url(${heroAvif.src})`}
+  >
+    <div class="limite">
+      <div class="hero-msg">
+        <p class="hero-rotulo">{empresa.cidade}, {empresa.uf}</p>
+        <h1 id="h1">
+          Desenvolvimento web, cibersegurança e tráfego pago para empresas
+        </h1>
+        <div class="hero-base">
+          <p class="hero-sub">
+            A iTech atende empresas que não têm equipe de tecnologia própria,
+            presencialmente em {empresa.cidade} e à distância para todo o
+            Brasil. Todo projeto começa por uma conversa, para entender o
+            problema antes de propor solução.
+          </p>
+          <div class="hero-acoes">
+            <a class="acao acao-clara" href="/contato/">Falar com a iTech</a>
+            <a class="acao-2 acao-2-clara" href="#frentes">Conheça os serviços</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa secao secao-fundo" aria-labelledby="h2-situacoes">
+    <div class="limite">
+      <div class="cabeca">
+        <h2 id="h2-situacoes">O que costuma trazer uma empresa até aqui</h2>
+      </div>
+      <div class="bloco">
+        <ul class="linhas linhas-2">
+          {
+            situacoes.map((s, i) => (
+              <li>
+                <span class="marca" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span>{s}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa secao" id="frentes" aria-labelledby="h2-frentes">
+    <div class="limite">
+      <div class="cabeca">
+        <h2 id="h2-frentes">Três serviços que se resolvem entre si</h2>
+        <p class="secao-sub">
+          Quem constrói o site entende de segurança. Quem cuida do anúncio
+          controla a página que recebe o clique. Não é um pacote: cada serviço
+          funciona sozinho, e juntos param de empurrar problema de um
+          fornecedor para o outro.
+        </p>
+      </div>
+
+      <ul class="frentes">
+        {
+          frentes.map((f, i) => {
+            const rota = `/servicos/${f.slug}/`;
+            return (
+              <li class="frente">
+                <p class="frente-n">{String(i + 1).padStart(2, "0")}</p>
+                <h3>
+                  <a href={rota}>{f.titulo}</a>
+                </h3>
+                <p class="frente-problema">{f.problema}</p>
+                <p class="frente-resumo">{f.resumo}</p>
+                <a class="frente-link" href={rota}>
+                  Saber mais
+                  <span aria-hidden="true">→</span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="faixa secao secao-fundo" aria-labelledby="h2-como">
+    <div class="limite">
+      <div class="cabeca">
+        <h2 id="h2-como">Como trabalhamos</h2>
+      </div>
+      <ol class="processo">
+        {
+          comoTrabalhamos.map((e) => (
+            <li>
+              <span class="processo-n">{e.n}</span>
+              <h3>{e.titulo}</h3>
+              <p>{e.texto}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="faixa nao em-escuro" aria-labelledby="h2-nao">
+    <div class="limite">
+      <p class="nao-rotulo" id="h2-nao">Com o que você pode contar</p>
+      <ol class="nao-lista">
+        {
+          compromissos.map((c, i) => (
+            <li>
+              <span class="nao-n" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <p class="nao-frase">{c.promessa}</p>
+              <p class="nao-porque">{c.limite}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="faixa secao" aria-labelledby="h2-quem">
+    <div class="limite">
+      <div class="cabeca">
+        <h2 id="h2-quem">Quem é a iTech</h2>
+        <p>
+          A iTech não quer ser só quem faz o site ou quem mexe no anúncio.
+          O trabalho começa entendendo o objetivo do negócio, e a tecnologia
+          entra depois, quando fica claro o que ela precisa resolver.
+        </p>
+      </div>
+      <ul class="diferenciais">
+        {
+          diferenciais.map((d) => (
+            <li>
+              <h3>{d.titulo}</h3>
+              <p>{d.texto}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="faixa secao secao-fundo" aria-labelledby="h2-faq">
+    <div class="limite">
+      <div class="cabeca">
+        <h2 id="h2-faq">Perguntas que chegam antes da primeira conversa</h2>
+        <p class="secao-sub">
+          Se a sua dúvida não estiver aqui, mande junto com a sua mensagem.
+        </p>
+      </div>
+
+      <div class="faq">
+        {
+          [perguntas.slice(0, Math.ceil(perguntas.length / 2)),
+           perguntas.slice(Math.ceil(perguntas.length / 2))].map((grupo) => (
+            <div class="faq-coluna">
+              {grupo.map((q) => (
+                <details class="q">
+                  <summary>
+                    <span>{q.p}</span>
+                    <i aria-hidden="true" />
+                  </summary>
+                  <p>{q.r}</p>
+                </details>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa chamada em-escuro" aria-labelledby="h2-cta">
+    <div class="limite chamada-grade">
+      <div>
+        <h2 id="h2-cta">Conte o que sua empresa precisa</h2>
+        <p>
+          Explique o que está acontecendo, o que precisa melhorar ou qual
+          objetivo quer alcançar. A gente entende o cenário e avalia com você
+          quais soluções fazem sentido.
+        </p>
+      </div>
+      <a class="acao acao-clara" href="/contato/">Falar com a iTech</a>
+    </div>
+  </section>
+</Site>
+
+<style>
+  .hero {
+    min-block-size: 82svh;
+    display: grid;
+    align-content: center;
+    padding-block: var(--e-24) var(--e-16);
+
+    --hero-foto: none;
+    background:
+      radial-gradient(
+        70% 90% at 12% 0%,
+        rgb(43 84 153 / 0.3),
+        transparent 62%
+      ),
+      radial-gradient(
+        55% 70% at 92% 100%,
+        rgb(43 84 153 / 0.22),
+        transparent 60%
+      ),
+      linear-gradient(
+        90deg,
+        rgb(20 37 68 / 0.68) 0%,
+        rgb(20 37 68 / 0.48) 50%,
+        rgb(20 37 68 / 0.14) 80%,
+        rgb(20 37 68 / 0) 100%
+      ),
+      linear-gradient(
+        0deg,
+        rgb(20 37 68 / 0.62) 0%,
+        rgb(20 37 68 / 0.34) 55%,
+        rgb(20 37 68 / 0.16) 100%
+      ),
+      var(--hero-foto),
+      var(--cor-escuro);
+    background-size: auto, auto, auto, auto, cover, auto;
+    background-position: center;
+    color: var(--cor-papel);
+  }
+  .hero-rotulo {
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-acento-sobre-escuro);
+    margin-block-end: var(--e-6);
+  }
+  h1 {
+    font-size: clamp(1.875rem, 1rem + 3.2vw, 3.5rem);
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    max-inline-size: 34ch;
+    margin-block-end: var(--e-8);
+  }
+  .hero-base {
+    display: grid;
+    gap: var(--e-6);
+    padding-block-start: var(--e-8);
+  }
+  @media (min-width: 64rem) {
+    .hero-base {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: var(--e-12);
+      align-items: start;
+    }
+  }
+  .hero-sub {
+    font-size: clamp(1.0625rem, 1rem + 0.45vw, 1.3125rem);
+    color: var(--cor-papel);
+    max-inline-size: 52ch;
+  }
+  .hero-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--e-4);
+  }
+
+  .hero-acoes .acao-2-clara {
+    color: var(--cor-papel);
+  }
+
+  .frentes {
+    display: grid;
+    gap: var(--e-2);
+  }
+  @media (min-width: 64rem) {
+    .frentes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--e-2);
+    }
+  }
+  .frente {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    gap: var(--e-4);
+    background: var(--cor-superficie);
+    padding: var(--e-8);
+  }
+  @media (max-width: 40rem) {
+    .frente {
+      padding: var(--e-6);
+    }
+  }
+
+  .frente h3 a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .frente {
+      transition:
+        background-color var(--m-base) var(--m-saida),
+        color var(--m-base) var(--m-saida);
+    }
+  }
+  .frente:hover,
+  .frente:focus-within {
+    background: var(--cor-escuro);
+    color: var(--cor-papel);
+  }
+  .frente:hover h3 a,
+  .frente:focus-within h3 a,
+  .frente:hover .frente-problema,
+  .frente:focus-within .frente-problema {
+    color: var(--cor-papel);
+  }
+  .frente:hover .frente-n,
+  .frente:focus-within .frente-n,
+  .frente:hover .frente-resumo,
+  .frente:focus-within .frente-resumo,
+  .frente:hover .frente-link,
+  .frente:focus-within .frente-link {
+    color: var(--cor-acento-sobre-escuro);
+  }
+  .frente-link {
+    margin-block-start: auto;
+  }
+
+  @supports (grid-template-rows: subgrid) {
+    @media (min-width: 64rem) {
+      .frentes {
+        grid-template-rows: auto auto auto auto auto;
+      }
+      .frente {
+        display: grid;
+        grid-row: span 5;
+        grid-template-rows: subgrid;
+        gap: var(--e-4);
+      }
+      .frente-link {
+        margin-block-start: 0;
+        align-self: start;
+      }
+    }
+  }
+  .frente-n {
+    font-family: var(--fonte-display);
+    font-size: clamp(3rem, 4.5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--cor-acento);
+  }
+  .frente h3 {
+    font-size: var(--t-h3);
+    margin: 0;
+  }
+  .frente h3 a {
+    color: var(--cor-tinta);
+    text-decoration: none;
+  }
+  .frente h3 a:hover {
+    color: var(--cor-acento);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+  .frente-problema {
+    font-family: var(--fonte-display);
+    font-size: var(--t-p);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    padding-block-start: var(--e-2);
+  }
+  .frente-resumo {
+    color: var(--cor-tinta-fraca);
+    font-size: var(--t-base);
+  }
+  .frente-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--e-2);
+    min-block-size: var(--toque-min);
+    margin-block-start: var(--e-2);
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    color: var(--cor-acento);
+    text-decoration: none;
+  }
+  .frente-link span {
+    transition: translate var(--m-rapido) var(--m-saida);
+  }
+  .frente-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .frente-link:hover span {
+    translate: 3px 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .frente-link span {
+      transition: none;
+    }
+    .frente-link:hover span {
+      translate: none;
+    }
+  }
+
+  .processo {
+    display: grid;
+    gap: var(--e-12);
+  }
+  @media (min-width: 52rem) {
+    .processo {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--e-12);
+    }
+  }
+  .processo-n {
+    display: block;
+    font-family: var(--fonte-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--cor-acento);
+    margin-block-end: var(--e-3);
+  }
+  .processo h3 {
+    margin-block-end: var(--e-2);
+  }
+  .processo p {
+    color: var(--cor-tinta-fraca);
+    font-size: var(--t-base);
+  }
+
+  .nao {
+    background: var(--cor-escuro);
+    color: var(--cor-papel);
+    min-block-size: 86svh;
+    display: grid;
+    align-content: center;
+    padding-block: var(--e-24);
+  }
+  .nao-rotulo {
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-acento-sobre-escuro);
+    margin-block-end: var(--e-12);
+  }
+  .nao-lista {
+    display: grid;
+    gap: var(--e-12);
+    max-inline-size: 60rem;
+  }
+  .nao-lista li {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: var(--e-4);
+    align-items: baseline;
+  }
+  @media (max-width: 40rem) {
+    .nao-lista {
+      gap: var(--e-8);
+    }
+    .nao-lista li {
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+      gap: var(--e-3);
+    }
+  }
+  .nao-n {
+    font-family: var(--fonte-display);
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--cor-acento-sobre-escuro);
+  }
+  .nao-frase {
+    font-family: var(--fonte-display);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 1rem + 2.8vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+  .nao-porque {
+    grid-column: 2;
+    margin-block-start: var(--e-3);
+    font-size: var(--t-p);
+    color: var(--cor-acento-sobre-escuro);
+    max-inline-size: 48ch;
+  }
+
+  .diferenciais {
+    display: grid;
+    gap: var(--e-8);
+    max-inline-size: 60rem;
+    margin-inline: auto;
+    text-align: start;
+  }
+  @media (min-width: 52rem) {
+    .diferenciais {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--e-12) var(--e-16);
+    }
+  }
+  .diferenciais h3 {
+    font-size: var(--t-h3);
+    letter-spacing: -0.015em;
+    margin-block-end: var(--e-2);
+  }
+  .diferenciais p {
+    color: var(--cor-tinta-fraca);
+    font-size: var(--t-base);
+  }
+
+  .faq {
+    display: grid;
+    gap: var(--e-8);
+  }
+  @media (min-width: 64rem) {
+    .faq {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--e-16);
+      align-items: start;
+    }
+  }
+
+  .faq-coluna {
+    display: grid;
+    align-content: start;
+  }
+
+  .chamada {
+    background: var(--cor-escuro);
+    color: var(--cor-papel);
+    padding-block: var(--e-16);
+  }
+  .chamada-grade {
+    display: grid;
+    gap: var(--e-8);
+  }
+  @media (min-width: 52rem) {
+    .chamada-grade {
+      grid-template-columns: minmax(0, 56ch) auto;
+      justify-content: start;
+      gap: var(--e-16);
+      align-items: center;
+    }
+  }
+  .chamada h2 {
+    margin-block-end: var(--e-3);
+  }
+  .chamada p {
+    color: var(--cor-acento-sobre-escuro);
+    max-inline-size: 56ch;
+  }
+</style>

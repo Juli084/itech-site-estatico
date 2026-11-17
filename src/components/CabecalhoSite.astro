@@ -1,0 +1,241 @@
+---
+import Logo from "./Logo.astro";
+import { empresa } from "../content/itech";
+import { paginasServico } from "../content/servicos";
+
+interface Props {
+  atual?: string;
+}
+const { atual = "" } = Astro.props;
+
+const curto: Record<string, string> = {
+  "desenvolvimento-web": "Desenvolvimento",
+  ciberseguranca: "Cibersegurança",
+  "trafego-pago": "Tráfego pago",
+};
+
+const itens = [
+  { href: "/", rotulo: "Início" },
+  ...paginasServico.map((s) => ({
+    href: `/servicos/${s.slug}/`,
+    rotulo: curto[s.slug] ?? s.titulo,
+  })),
+  { href: "/contato/", rotulo: "Contato" },
+];
+
+const ehAtual = (href: string) =>
+  href === "/" ? atual === "/" : atual.startsWith(href);
+---
+<header class="topo faixa">
+  <div class="limite topo-linha">
+    <a
+      class="marca"
+      href="/"
+      aria-label={`${empresa.nome}, ir para a página inicial`}
+    >
+      <Logo altura={30} />
+    </a>
+
+    <nav class="nav-desktop" aria-label="Navegação principal">
+      <ul class="nav">
+        {
+          itens.map((i) => (
+            <li>
+              <a href={i.href} aria-current={ehAtual(i.href) ? "page" : undefined}>
+                {i.rotulo}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <details class="menu">
+      <summary class="menu-botao">
+        <span>Menu</span>
+        <span class="menu-barras" aria-hidden="true">
+          <i></i><i></i><i></i>
+        </span>
+      </summary>
+
+      <div class="menu-corpo">
+        <nav aria-label="Navegação principal">
+          <ul class="nav nav-movel">
+            {
+              itens.map((i) => (
+                <li>
+                  <a
+                    href={i.href}
+                    aria-current={ehAtual(i.href) ? "page" : undefined}
+                  >
+                    {i.rotulo}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  .topo {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
+    background: var(--cor-papel);
+    border-block-end: 1px solid transparent;
+  }
+  .topo-linha {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--e-4);
+    min-block-size: 4.5rem;
+  }
+
+  @supports not (animation-timeline: scroll(root block)) {
+    .topo {
+      border-block-end-color: var(--cor-linha-ornamento);
+    }
+  }
+
+  @supports (animation-timeline: scroll(root block)) {
+    .topo {
+      animation-name: topo-destacar;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 120px;
+    }
+  }
+  @keyframes topo-destacar {
+    to {
+      border-block-end-color: var(--cor-linha-ornamento);
+      box-shadow: 0 1px 12px rgb(20 37 68 / 0.08);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .topo {
+      animation: none;
+      border-block-end-color: var(--cor-linha-ornamento);
+    }
+  }
+
+  .marca {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    flex: none;
+    color: inherit;
+  }
+
+  .menu {
+    position: relative;
+  }
+  .menu-botao {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--e-3);
+    min-block-size: var(--toque-acao);
+    padding-inline: var(--e-3);
+    margin-inline-end: calc(var(--e-3) * -1);
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    color: var(--cor-tinta);
+  }
+  .menu-botao::-webkit-details-marker {
+    display: none;
+  }
+  .menu-botao::marker {
+    content: "";
+  }
+  .menu-barras {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .menu-barras i {
+    display: block;
+    inline-size: 18px;
+    block-size: 2px;
+    background: var(--cor-tinta);
+  }
+  .menu[open] .menu-barras i:first-child {
+    display: none;
+  }
+  .menu[open] .menu-barras i {
+    inline-size: 12px;
+  }
+
+  .menu-corpo {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-start: calc(100% + var(--e-3));
+    z-index: 20;
+    min-inline-size: 15rem;
+    padding: var(--e-4);
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-linha-ornamento);
+    box-shadow: 0 12px 32px rgb(22 35 63 / 0.14);
+  }
+
+  .nav {
+    display: grid;
+    gap: var(--e-1);
+  }
+  .nav a {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--toque-acao);
+    padding-inline: var(--e-2);
+    color: var(--cor-tinta);
+    font-size: var(--t-base);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .nav a:hover {
+    background: var(--cor-realce);
+  }
+  .nav a[aria-current="page"] {
+    color: var(--cor-acento);
+    box-shadow: inset 3px 0 0 var(--cor-acento);
+  }
+
+  .nav-desktop {
+    display: none;
+  }
+  @media (min-width: 60rem) {
+    .nav-desktop {
+      display: block;
+    }
+    .menu {
+      display: none;
+    }
+    .nav {
+      display: flex;
+      gap: var(--e-6);
+    }
+    .nav a {
+      min-block-size: 2.5rem;
+      padding-inline: 0;
+      font-size: var(--t-rotulo);
+      border-block-end: 2px solid transparent;
+      transition: border-color var(--m-rapido) var(--m-saida);
+    }
+    .nav a:hover {
+      background: none;
+      border-block-end-color: var(--cor-acento);
+    }
+    .nav a[aria-current="page"] {
+      box-shadow: none;
+      border-block-end-color: var(--cor-acento);
+    }
+  }
+</style>

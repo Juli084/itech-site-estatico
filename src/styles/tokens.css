@@ -1,0 +1,60 @@
+:root {
+
+  --cor-papel: #f2f4f7;
+  --cor-superficie: #ffffff;
+
+  --cor-tinta: #16233f;
+  --cor-tinta-fraca: #47566e;
+  --cor-tinta-desabilitada: #606e85;
+
+  --cor-acento: #0b49cd;
+  --cor-acento-hover: #083696;
+
+  --cor-acento-sobre-escuro: #a8c2f0;
+
+  --cor-realce: #e4eaf4;
+
+  --cor-linha-escopo: #6e7c92;
+  --cor-linha-ornamento: #a2acbc;
+
+  --cor-escuro: #142544;
+
+  --cor-foco: var(--cor-acento);
+  --cor-foco-escuro: var(--cor-acento-sobre-escuro);
+
+  --fonte-display: "Schibsted Grotesk", system-ui, sans-serif;
+  --fonte-texto: "Instrument Sans", system-ui, sans-serif;
+
+  --t-base: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --t-p: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --t-rotulo: clamp(0.8125rem, 0.8rem + 0.05vw, 0.875rem);
+  --t-h3: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  --t-h2: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+  --t-h1: clamp(2rem, 1.3rem + 3.4vw, 4rem);
+
+  --medida-texto: 62ch;
+
+  --e-1: 0.25rem;
+  --e-2: 0.5rem;
+  --e-3: 0.75rem;
+  --e-4: 1rem;
+  --e-6: 1.5rem;
+  --e-8: 2rem;
+  --e-12: 3rem;
+  --e-16: 4rem;
+  --e-24: 6rem;
+
+  --goteira: clamp(1.25rem, 5vw, 4rem);
+  --largura-max: 76rem;
+
+  --raio-estrutura: 0;
+  --raio-acao: 2px;
+
+  --m-rapido: 140ms;
+  --m-base: 240ms;
+  --m-lento: 560ms;
+  --m-saida: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --toque-min: 24px;
+  --toque-acao: 44px;
+}

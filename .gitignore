@@ -1,0 +1,28 @@
+# Segredos: só arquivos de exemplo entram no Git.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+config.php
+config/contato.php
+config/dados/
+*.local.php
+
+# Dependências e build
+node_modules/
+dist/
+.astro/
+*.tsbuildinfo
+
+# Pacote de publicação e lista de envio: gerados por ferramentas/
+publicacao/
+_alterados.txt
+
+# Sistema, editor, logs e temporários
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*.log
+tmp/

@@ -1,0 +1,647 @@
+---
+import { Picture } from "astro:assets";
+import { escopoCiberseguranca } from "../content/itech";
+
+interface Props {
+  rotulo: string;
+  titulo: string;
+  sub: string;
+  variante: "home" | "desenvolvimento" | "ciberseguranca" | "trafego";
+  acaoPrimaria?: string;
+  acaoSecundaria?: string;
+  imagem?: ImageMetadata;
+}
+
+const {
+  rotulo,
+  titulo,
+  sub,
+  variante,
+  acaoPrimaria = "Solicitar contato",
+  acaoSecundaria,
+  imagem,
+} = Astro.props;
+---
+<section class="hero faixa em-escuro" aria-labelledby="h1">
+  <div class="limite hero-grade">
+    <div class="hero-mensagem">
+      <p class="hero-rotulo">{rotulo}</p>
+      <h1 id="h1" set:html={titulo} />
+      <p class="hero-sub">{sub}</p>
+      <div class="hero-acoes">
+        <a class="acao" href="#contato">{acaoPrimaria}</a>
+        {acaoSecundaria && <a class="acao-2" href="#frentes">{acaoSecundaria}</a>}
+      </div>
+    </div>
+
+    <div class="hero-imagem" aria-hidden={imagem ? undefined : "true"}>
+      {
+        imagem && (
+          <Picture
+            class="hero-foto"
+            src={imagem}
+            alt=""
+            formats={["avif", "webp"]}
+            /* A reserva do <img> é WebP, não o formato de origem.
+               Sem isso o Astro gera PNG de reserva de até 1,4 MB e
+               despeja no dist. Navegador atual nenhum baixaria, mas é
+               peso morto no pacote, e pacote inchado é o tipo de coisa
+               que ninguém percebe até o dia da publicação. */
+            fallbackFormat="webp"
+            widths={[640, 1024, 1456]}
+            /* As larguras saem da área real que a imagem ocupa, não de
+               hábito: no desktop a área fica perto de 505 px CSS, e a
+               2x dá ~1010; no celular de 360 fica perto de 320, e a 2x
+               dá 640. 1456 é a largura nativa; acima disso seria
+               ampliar e pesar à toa.
+
+               `sizes` precisa bater com a grade, senão o navegador
+               baixa a largura errada: abaixo de 64rem a imagem ocupa a
+               largura toda menos a goteira; acima, ela é a coluna de
+               1fr de uma grade 1,15fr/1fr. */
+            sizes="(min-width: 80rem) 536px, (min-width: 64rem) 46vw, calc(100vw - 2.5rem)"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        )
+      }
+
+      {
+        !imagem && variante === "home" && (
+          <div class="art art-home">
+            <div class="peca peca-fundo">
+              <span class="peca-rot">Criativo</span>
+              <b>Quer saber se tráfego pago faz sentido para sua empresa?</b>
+            </div>
+            <div class="peca peca-meio folha">
+              <span class="peca-rot">Escopo</span>
+              <span class="mini-escopo">
+                <i>diagnóstico e priorização de riscos</i>
+                <i>configuração inicial de backup</i>
+              </span>
+              <span class="folha-regua" />
+              <span class="mini-escopo mini-escopo-fora">
+                <i>SOC 24/7</i>
+                <i>pentest</i>
+                <i>monitoramento contínuo</i>
+              </span>
+            </div>
+            <div class="peca peca-frente janela">
+              <span class="janela-barra">
+                <i /><i /><i />
+                <em class="janela-url">itechsolucoesdigitais.com</em>
+              </span>
+              <span class="janela-corpo">
+                <span class="mini-topo">
+                  <b class="mini-marca">iTech</b>
+                  <span class="mini-nav">
+                    <i>Serviços</i>
+                    <i>Escopo</i>
+                    <i>Contato</i>
+                  </span>
+                </span>
+                <b class="janela-h">Escopo escrito antes de começar</b>
+                <span class="janela-btn">Solicitar contato</span>
+              </span>
+            </div>
+          </div>
+        )
+      }
+
+      {
+        !imagem && variante === "desenvolvimento" && (
+          <div class="art art-dev">
+            <div class="janela janela-grande">
+              <span class="janela-barra">
+                <i /><i /><i />
+                <em class="janela-url">itechsolucoesdigitais.com</em>
+              </span>
+              <span class="janela-corpo">
+                <span class="mini-topo">
+                  <b class="mini-marca">iTech</b>
+                  <span class="mini-nav">
+                    <i>Serviços</i>
+                    <i>Escopo</i>
+                    <i>Contato</i>
+                  </span>
+                </span>
+                <b class="janela-h">
+                  Escopo escrito
+                  <br />
+                  antes de começar
+                </b>
+                <span class="mini-p">
+                  Antes de propor tecnologia, definimos o que faz parte e o
+                  que não faz parte da oferta.
+                </span>
+                <span class="janela-btn">Solicitar contato</span>
+                <span class="janela-grade-3">
+                  <span>Desenvolvimento web</span>
+                  <span>Cibersegurança</span>
+                  <span>Tráfego pago</span>
+                </span>
+              </span>
+            </div>
+            <div class="fone">
+              <span class="fone-tela">
+                <b class="fone-marca">iTech</b>
+                <b class="fone-h">
+                  Escopo escrito
+                  <br />
+                  antes de começar
+                </b>
+                <span class="mini-p">
+                  O que faz parte e o que não faz parte.
+                </span>
+                <span class="janela-btn">Solicitar contato</span>
+              </span>
+            </div>
+          </div>
+        )
+      }
+
+      {
+        !imagem && variante === "ciberseguranca" && (
+          <div class="art art-ciber">
+            <div class="folha folha-escopo">
+              <span class="peca-rot">Escopo, cibersegurança</span>
+              <p class="folha-tit">Faz parte</p>
+              <ul class="folha-lista">
+                {escopoCiberseguranca.inclui.map((i) => (
+                  <li>{i}</li>
+                ))}
+              </ul>
+              <span class="folha-corte" />
+              <p class="folha-tit folha-tit-fora">Não faz parte</p>
+              <ul class="folha-lista folha-lista-fora">
+                {escopoCiberseguranca.naoInclui.map((i) => (
+                  <li>
+                    <span class="corte-fio" />
+                    {i}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )
+      }
+
+      {
+        !imagem && variante === "trafego" && (
+          <div class="art art-trafego">
+            <div class="peca criativo c1">
+              <span class="peca-rot">Contexto</span>
+              <b>Seu cliente provavelmente está lá.</b>
+            </div>
+            <div class="peca criativo c2">
+              <span class="peca-rot">Situação</span>
+              <b>Qual dessas é a sua situação hoje?</b>
+            </div>
+            <div class="peca criativo c3 criativo-escuro">
+              <span class="peca-rot">Próximo passo</span>
+              <b>Quer saber se tráfego pago faz sentido para sua empresa?</b>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: var(--e-16) var(--e-16);
+    overflow: hidden;
+  }
+  .hero-grade {
+    display: grid;
+    gap: var(--e-12);
+  }
+  @media (min-width: 64rem) {
+    .hero-grade {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: var(--e-16);
+      align-items: center;
+      min-block-size: 32rem;
+    }
+  }
+
+  @media (max-width: 63.999rem) {
+    .hero-imagem {
+      order: -1;
+    }
+    .hero {
+      padding-block: var(--e-8) var(--e-12);
+    }
+  }
+
+  .hero-rotulo {
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-tinta-fraca);
+    margin-block-end: var(--e-4);
+  }
+  h1 {
+    font-size: clamp(2.25rem, 1.2rem + 4.2vw, 4.25rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-block-end: var(--e-6);
+  }
+  .hero-sub {
+    font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+    color: var(--cor-tinta-fraca);
+    max-inline-size: 46ch;
+    margin-block-end: var(--e-8);
+  }
+  .hero-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--e-4);
+  }
+
+  .hero-imagem {
+    position: relative;
+    container-type: inline-size;
+    aspect-ratio: 4 / 3;
+    background: var(--cor-realce);
+  }
+  @media (max-width: 63.999rem) {
+    .hero-imagem {
+      aspect-ratio: 16 / 10;
+    }
+  }
+  .art {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero-imagem :global(picture),
+  .hero-foto {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .peca,
+  .folha,
+  .janela,
+  .fone {
+    background: var(--cor-superficie);
+    box-shadow: 0 1px 0 var(--cor-linha-ornamento),
+      0 10px 30px rgb(22 35 63 / 0.1);
+  }
+  .peca-rot {
+    display: block;
+    font-size: 1.5cqw;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cor-tinta-fraca);
+    margin-block-end: 1cqw;
+  }
+  .peca > b {
+    display: block;
+    font-family: var(--fonte-display);
+    font-weight: 700;
+    font-size: 2.7cqw;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--cor-tinta);
+  }
+
+  .art-home .peca {
+    position: absolute;
+    padding: 2.6cqw;
+  }
+  .peca-fundo {
+    inset-block-start: 3%;
+    inset-inline-end: 2%;
+    inline-size: 42%;
+    aspect-ratio: 4 / 5;
+    rotate: 3deg;
+  }
+  .peca-meio {
+    inset-block-start: 14%;
+    inset-inline-start: 1%;
+    inline-size: 40%;
+    aspect-ratio: 3 / 4;
+    rotate: -4deg;
+  }
+  .peca-frente {
+    inset-block-end: 4%;
+    inset-inline-start: 50%;
+    translate: -50% 0;
+    inline-size: 78%;
+    padding: 0 !important;
+  }
+
+  .janela {
+    display: block;
+  }
+  .janela-barra {
+    display: flex;
+    align-items: center;
+    gap: 0.8cqw;
+    padding: 1.2cqw 1.5cqw;
+    background: var(--cor-realce);
+    border-block-end: 1px solid var(--cor-linha-ornamento);
+  }
+  .janela-barra i {
+    inline-size: 1cqw;
+    block-size: 1cqw;
+    border-radius: 50%;
+    background: var(--cor-linha-ornamento);
+  }
+  .janela-url {
+    flex: 1;
+    margin-inline-start: 1.5cqw;
+    padding: 0.4cqw 1.2cqw;
+    background: var(--cor-superficie);
+    font-style: normal;
+    font-size: 1.4cqw;
+    color: var(--cor-tinta-fraca);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .janela-corpo {
+    display: block;
+    padding: 2.6cqw;
+  }
+
+  .mini-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block-end: 1.6cqw;
+    margin-block-end: 2.4cqw;
+    border-block-end: 1px solid var(--cor-linha-ornamento);
+  }
+  .mini-marca {
+    font-family: var(--fonte-display);
+    font-weight: 700;
+    font-size: 2cqw;
+    letter-spacing: -0.02em;
+    color: var(--cor-tinta);
+  }
+  .mini-nav {
+    display: flex;
+    gap: 1.6cqw;
+  }
+  .mini-nav i {
+    font-style: normal;
+    font-size: 1.4cqw;
+    font-weight: 600;
+    color: var(--cor-tinta-fraca);
+  }
+  .janela-h {
+    display: block;
+    font-family: var(--fonte-display);
+    font-weight: 700;
+    font-size: 4.2cqw;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    color: var(--cor-tinta);
+    margin-block-end: 1.6cqw;
+  }
+  .mini-p {
+    display: block;
+    font-size: 1.75cqw;
+    line-height: 1.4;
+    color: var(--cor-tinta-fraca);
+    max-inline-size: 34ch;
+  }
+  .janela-btn {
+    display: inline-block;
+    padding: 1.2cqw 2cqw;
+    background: var(--cor-acento);
+    color: #fff;
+    font-size: 1.5cqw;
+    font-weight: 700;
+    margin-block-start: 2.4cqw;
+  }
+  .janela-grade-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.4cqw;
+    margin-block-start: 3cqw;
+  }
+  .janela-grade-3 span {
+    padding-block-start: 1.2cqw;
+    border-block-start: 2px solid var(--cor-tinta);
+    font-size: 1.4cqw;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--cor-tinta);
+  }
+
+  .janela-grande {
+    position: absolute;
+    inset-block-start: 50%;
+    translate: 0 -50%;
+    inset-inline-start: 0;
+    inline-size: 86%;
+  }
+  .fone {
+    position: absolute;
+    inset-block-end: 3%;
+    inset-inline-end: -2%;
+    inline-size: 27%;
+    aspect-ratio: 1 / 2;
+    padding: 1cqw;
+    border-radius: 1.5cqw;
+  }
+  .fone-tela {
+    display: flex;
+    flex-direction: column;
+    block-size: 100%;
+    padding: 1.6cqw;
+    background: var(--cor-papel);
+  }
+  .fone-marca {
+    font-family: var(--fonte-display);
+    font-weight: 700;
+    font-size: 1.5cqw;
+    color: var(--cor-tinta);
+    margin-block-end: 1.6cqw;
+  }
+  .fone-h {
+    display: block;
+    font-family: var(--fonte-display);
+    font-weight: 700;
+    font-size: 2.3cqw;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--cor-tinta);
+    margin-block-end: 1.2cqw;
+  }
+  .fone .mini-p {
+    font-size: 1.3cqw;
+  }
+  .fone .janela-btn {
+    padding: 1cqw 1.2cqw;
+    font-size: 1.2cqw;
+    margin-block-start: auto;
+  }
+
+  .folha {
+    padding: 3cqw;
+  }
+  .folha-escopo {
+    position: absolute;
+    inset-block: 4%;
+    inset-inline-start: 50%;
+    translate: -50% 0;
+    inline-size: 84%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .folha-tit {
+    font-family: var(--fonte-display);
+    font-size: 2.3cqw;
+    font-weight: 700;
+    color: var(--cor-tinta);
+    margin-block-end: 1.2cqw;
+  }
+  .folha-tit-fora {
+    color: var(--cor-tinta-fraca);
+  }
+  .folha-lista {
+    display: grid;
+    gap: 1cqw;
+  }
+  .folha-lista li {
+    font-size: 1.8cqw;
+    line-height: 1.25;
+    color: var(--cor-tinta);
+    padding-inline-start: 1.6cqw;
+    border-inline-start: 2px solid var(--cor-acento);
+  }
+
+  .folha-corte {
+    display: block;
+    block-size: 4px;
+    background: var(--cor-linha-escopo);
+    margin-block: auto 3cqw;
+  }
+  .folha-lista-fora li {
+    display: flex;
+    align-items: baseline;
+    gap: 1cqw;
+    border-inline-start: 0;
+    padding-inline-start: 0;
+    color: var(--cor-tinta-fraca);
+  }
+  .corte-fio {
+    flex: none;
+    inline-size: 2.2cqw;
+    block-size: 2px;
+    background: var(--cor-linha-escopo);
+    translate: 0 -0.25em;
+  }
+
+  .mini-escopo {
+    display: grid;
+    gap: 0.9cqw;
+  }
+  .mini-escopo i {
+    font-style: normal;
+    font-size: 1.5cqw;
+    line-height: 1.2;
+    color: var(--cor-tinta);
+    padding-inline-start: 1.2cqw;
+    border-inline-start: 2px solid var(--cor-acento);
+  }
+  .mini-escopo-fora i {
+    color: var(--cor-tinta-fraca);
+    border-inline-start-color: var(--cor-linha-ornamento);
+    text-decoration: line-through;
+    text-decoration-color: var(--cor-linha-escopo);
+  }
+  .folha-regua {
+    display: block;
+    block-size: 3px;
+    background: var(--cor-linha-escopo);
+    margin-block: 2cqw;
+  }
+
+  .art-trafego .criativo {
+    position: absolute;
+    inline-size: 44%;
+    aspect-ratio: 4 / 5;
+    padding: 2.6cqw;
+  }
+  .c1 {
+    inset-block-start: 3%;
+    inset-inline-start: 2%;
+    rotate: -5deg;
+  }
+  .c2 {
+    inset-block-start: 2%;
+    inset-inline-end: 2%;
+    rotate: 4deg;
+  }
+  .c3 {
+    inset-block-end: 3%;
+    inset-inline-start: 50%;
+    translate: -50% 0;
+    inline-size: 48%;
+  }
+  .criativo-escuro {
+    background: var(--cor-escuro);
+  }
+  .criativo-escuro .peca-rot {
+    color: var(--cor-acento-sobre-escuro);
+  }
+  .criativo-escuro b {
+    color: var(--cor-papel);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-mensagem > * {
+      animation: subir var(--m-lento) var(--m-saida) both;
+    }
+    .hero-rotulo {
+      animation-delay: 0ms;
+    }
+    h1 {
+      animation-delay: 60ms;
+    }
+    .hero-sub {
+      animation-delay: 120ms;
+    }
+    .hero-acoes {
+      animation-delay: 180ms;
+    }
+    .art > * {
+      animation: assentar var(--m-lento) var(--m-saida) both;
+      animation-delay: 140ms;
+    }
+    .peca-meio,
+    .c2 {
+      animation-delay: 220ms;
+    }
+    .peca-frente,
+    .c3,
+    .fone {
+      animation-delay: 300ms;
+    }
+  }
+  @keyframes subir {
+    from {
+      translate: 0 0.75rem;
+    }
+  }
+  @keyframes assentar {
+    from {
+      opacity: 0;
+      scale: 0.97;
+    }
+  }
+</style>

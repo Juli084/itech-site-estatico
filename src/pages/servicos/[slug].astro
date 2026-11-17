@@ -1,0 +1,336 @@
+---
+import type { ImageMetadata } from "astro";
+import Site from "../../layouts/Site.astro";
+import ListaEscopo from "../../components/ListaEscopo.astro";
+import HeroiDividido from "../../components/heroi/HeroiDividido.astro";
+import HeroiImersivo from "../../components/heroi/HeroiImersivo.astro";
+import HeroiTipografico from "../../components/heroi/HeroiTipografico.astro";
+import { paginasServico } from "../../content/servicos";
+import { empresa } from "../../content/itech";
+
+import fotoDesenvolvimento from "../../imagens/marcador-desenvolvimento.jpg";
+import fotoCiberseguranca from "../../imagens/marcador-ciberseguranca.jpg";
+import fotoTrafego from "../../imagens/marcador-trafego.jpg";
+
+const fotoPorSlug: Record<string, ImageMetadata> = {
+  "desenvolvimento-web": fotoDesenvolvimento,
+  ciberseguranca: fotoCiberseguranca,
+  "trafego-pago": fotoTrafego,
+};
+
+export function getStaticPaths() {
+  return paginasServico.map((s) => ({
+    params: { slug: s.slug },
+    props: { servico: s },
+  }));
+}
+
+const { servico } = Astro.props;
+const rota = `/servicos/${servico.slug}/`;
+const tom = servico.tom;
+const ressalvaNaAbertura = tom.heroi === "tipografico" && !!servico.ressalva;
+const ressalvaDepois = !tom.ressalvaNoTopo && !!servico.ressalva;
+
+const terEmMaos = servico.escopo.terEmMaos;
+const foto = fotoPorSlug[servico.slug];
+if (!foto) {
+  throw new Error(`Falta a foto de topo de /servicos/${servico.slug}/ em fotoPorSlug.`);
+}
+const num = (i: number) => String(i + 1).padStart(2, "0");
+---
+<Site
+  dadosEstruturados={{
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: servico.titulo,
+    description: servico.descricao,
+    serviceType: servico.titulo,
+    areaServed: { "@type": "City", name: empresa.cidade },
+    provider: {
+      "@type": "Organization",
+      name: empresa.nome,
+      url: `https://${empresa.dominio}/`,
+    },
+    url: `https://${empresa.dominio}${rota}`,
+  }}
+  titulo={servico.tituloSeo}
+  descricao={servico.descricao}
+  atual={rota}
+>
+  <div class={`frente-${tom.enfase}`}>
+    {
+      tom.heroi === "dividido" && (
+        <HeroiDividido
+          rotulo={`${empresa.cidade}, ${empresa.uf}`}
+          h1={servico.h1}
+          intro={servico.intro}
+          acaoTexto={servico.acao}
+          acaoHref={`/contato/?servico=${servico.slug}`}
+          foto={foto}
+        />
+      )
+    }
+    {
+      tom.heroi === "imersivo" && (
+        <HeroiImersivo
+          rotulo={`${empresa.cidade}, ${empresa.uf}`}
+          h1={servico.h1}
+          intro={servico.intro}
+          acaoTexto={servico.acao}
+          acaoHref={`/contato/?servico=${servico.slug}`}
+          foto={foto}
+        />
+      )
+    }
+    {
+      tom.heroi === "tipografico" && (
+        <HeroiTipografico
+          rotulo={`${empresa.cidade}, ${empresa.uf}`}
+          h1={servico.h1}
+          intro={servico.intro}
+          acaoTexto={servico.acao}
+          acaoHref={`/contato/?servico=${servico.slug}`}
+          ressalva={servico.ressalva}
+          foto={foto}
+        />
+      )
+    }
+
+    <section
+      class:list={["faixa", "secao", !ressalvaNaAbertura && "secao-fundo"]}
+      aria-labelledby="h2-quando"
+    >
+      <div class="limite">
+        <div class="cabeca">
+          <h2 id="h2-quando">
+            {servico.tituloQuando ?? "Quando procurar este serviço"}
+          </h2>
+          <p>Se alguma soa familiar, a conversa já tem por onde começar.</p>
+        </div>
+        <div class="bloco">
+          <ul class="linhas linhas-2">
+            {
+              servico.escopo.quandoProcurar.map((s, i) => (
+                <li>
+                  <span class="marca" aria-hidden="true">
+                    {num(i)}
+                  </span>
+                  <span>{s}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="faixa secao" id="escopo" aria-labelledby="h2-escopo">
+      <div class="limite">
+        <div class="cabeca">
+          <h2 id="h2-escopo">O que entra e o que não entra</h2>
+        </div>
+        <ListaEscopo
+          inclui={servico.escopo.inclui}
+          naoInclui={servico.escopo.naoInclui}
+        />
+        {ressalvaDepois && <p class="ressalva">{servico.ressalva}</p>}
+      </div>
+    </section>
+
+    <section class="faixa secao secao-fundo" aria-labelledby="h2-como">
+      <div class="limite">
+        <div class="cabeca">
+          <h2 id="h2-como">Como funciona</h2>
+          <p>
+            A conversa vem primeiro, e a proposta sai dela, com as entregas, o
+            valor e o prazo estimado. As quatro etapas abaixo são o trabalho
+            contratado, e começam depois que você aprova.
+          </p>
+        </div>
+        <ol class="processo">
+          {
+            servico.processo.map((e) => (
+              <li>
+                <span class="processo-n">{e.n}</span>
+                <h3>{e.titulo}</h3>
+                <p>{e.texto}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    {
+      terEmMaos && (
+        <section class="faixa secao" aria-labelledby="h2-maos">
+          <div class="limite">
+            <div class="cabeca">
+              <h2 id="h2-maos">O que ter em mãos para a conversa</h2>
+            </div>
+            <div class="bloco">
+              <ul class="linhas linhas-2">
+                {terEmMaos.map((m) => (
+                  <li>
+                    <span class="marca" aria-hidden="true">
+                      —
+                    </span>
+                    <span>{m}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <section class="faixa secao secao-fundo" aria-labelledby="h2-faq">
+      <div class="limite">
+        <div class="cabeca">
+          <h2 id="h2-faq">
+            {servico.tituloPerguntas ?? "Perguntas sobre este serviço"}
+          </h2>
+          <p>
+            Se a sua for outra, mande junto com a mensagem.
+          </p>
+        </div>
+        <div class="faq-frente">
+          {
+            servico.perguntas.map((q) => (
+              <details class="q">
+                <summary>
+                  <span>{q.p}</span>
+                  <i aria-hidden="true" />
+                </summary>
+                <p>{q.r}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="faixa chamada em-escuro" aria-labelledby="h2-cta">
+      <div class="limite chamada-grade">
+        <div>
+          <h2 id="h2-cta">
+            {servico.fecho?.titulo ?? "Conte o que sua empresa precisa"}
+          </h2>
+          <p>
+            {servico.fecho?.texto ??
+              "Explique o que está acontecendo e qual objetivo quer alcançar. A iTech entende o cenário e avalia com você quais caminhos fazem sentido."}
+          </p>
+        </div>
+        <a class="acao acao-clara" href={`/contato/?servico=${servico.slug}`}>
+          {servico.acao}
+        </a>
+      </div>
+    </section>
+  </div>
+</Site>
+
+<style>
+
+  .processo {
+    display: grid;
+    gap: var(--e-8);
+  }
+  @media (min-width: 52rem) {
+    .processo {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .processo-n {
+    display: block;
+    font-family: var(--fonte-display);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--cor-acento);
+    margin-block-end: var(--e-2);
+  }
+  .processo h3 {
+    font-size: var(--t-h3);
+    margin-block-end: var(--e-2);
+  }
+  .processo p {
+    color: var(--cor-tinta-fraca);
+    font-size: var(--t-base);
+  }
+
+  .ressalva {
+    margin-block-start: var(--e-8);
+    padding: var(--e-6);
+    background: var(--cor-superficie);
+    border-inline-start: 3px solid var(--cor-linha-escopo);
+    font-size: var(--t-base);
+    max-inline-size: 80ch;
+  }
+
+  .faq-frente {
+    display: grid;
+    align-content: start;
+    max-inline-size: 78ch;
+    margin-inline: auto;
+  }
+
+  .chamada {
+    background: var(--cor-escuro);
+    color: var(--cor-papel);
+    padding-block: var(--e-16);
+  }
+  .chamada-grade {
+    display: grid;
+    gap: var(--e-6);
+  }
+  @media (min-width: 52rem) {
+    .chamada-grade {
+      grid-template-columns: minmax(0, 56ch) auto;
+      justify-content: start;
+      gap: var(--e-16);
+      align-items: center;
+    }
+  }
+  .chamada h2 {
+    font-size: clamp(1.625rem, 1.3rem + 1.4vw, 2.25rem);
+    letter-spacing: -0.025em;
+    margin-block-end: var(--e-3);
+  }
+  .chamada p {
+    color: var(--cor-acento-sobre-escuro);
+    max-inline-size: 56ch;
+  }
+</style>
+
+<style is:global>
+
+  .frente-escopo #escopo {
+    background: var(--cor-escuro);
+    color: var(--cor-papel);
+  }
+  .frente-escopo #escopo h2,
+  .frente-escopo #escopo .rot {
+    color: var(--cor-papel);
+  }
+  .frente-escopo #escopo .cabeca p,
+  .frente-escopo #escopo .rot-fora,
+  .frente-escopo #escopo .lista-fora li {
+    color: var(--cor-acento-sobre-escuro);
+  }
+  .frente-escopo #escopo .lista-dentro li {
+    color: var(--cor-papel);
+  }
+  .frente-escopo #escopo .dentro {
+    border-inline-start-color: var(--cor-acento-sobre-escuro);
+  }
+  .frente-escopo #escopo .conector {
+    background: var(--cor-acento-sobre-escuro);
+  }
+  .frente-escopo #escopo .ressalva {
+    background: transparent;
+    border-inline-start-color: var(--cor-acento-sobre-escuro);
+    color: var(--cor-acento-sobre-escuro);
+  }
+</style>

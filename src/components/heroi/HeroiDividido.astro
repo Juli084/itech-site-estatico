@@ -1,0 +1,165 @@
+---
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  rotulo: string;
+  h1: string;
+  intro: string;
+  acaoTexto: string;
+  acaoHref: string;
+  foto: ImageMetadata;
+}
+
+const { rotulo, h1, intro, acaoTexto, acaoHref, foto } = Astro.props;
+---
+<section class="abertura-dividida em-escuro" aria-labelledby="h1">
+  <div class="ad-texto">
+    <div class="ad-dentro">
+      <p class="ad-rotulo">{rotulo}</p>
+      <h1 id="h1" set:html={h1} />
+      <p class="ad-intro">{intro}</p>
+      <div class="ad-acoes">
+        <a class="acao acao-clara" href={acaoHref}>{acaoTexto}</a>
+        <a class="acao-2 acao-2-clara" href="#escopo">
+          Ver o que entra e o que não entra
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-foto">
+    <Picture
+      src={foto}
+      alt=""
+      widths={[640, 900, 1200, 1600]}
+      sizes="(min-width: 64rem) 47vw, 100vw"
+      formats={["avif", "webp"]}
+      fallbackFormat="webp"
+      quality={62}
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+</section>
+
+<style>
+  .abertura-dividida {
+    display: grid;
+    background: var(--cor-escuro);
+    color: var(--cor-papel);
+    container-type: inline-size;
+  }
+
+  @media (min-width: 64rem) {
+    .abertura-dividida {
+      grid-template-columns: minmax(0, 53fr) minmax(0, 47fr);
+      align-items: stretch;
+      min-block-size: 78svh;
+    }
+  }
+
+  .ad-texto {
+    display: grid;
+    align-content: center;
+    padding-block: var(--e-16);
+    padding-inline: var(--goteira);
+  }
+  @media (min-width: 64rem) {
+    .ad-texto {
+      padding-block: var(--e-24);
+      padding-inline-end: var(--e-16);
+      padding-inline-start: max(
+        var(--goteira),
+        calc((100cqw - var(--largura-max)) / 2)
+      );
+    }
+  }
+
+  .ad-rotulo {
+    font-size: var(--t-rotulo);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-acento-sobre-escuro);
+    margin-block-end: var(--e-6);
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 1.1rem + 3.6vw, 4rem);
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+    margin-block-end: var(--e-6);
+  }
+
+  .ad-intro {
+    font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+    color: var(--cor-papel);
+    max-inline-size: 46ch;
+    margin-block-end: var(--e-8);
+  }
+
+  .ad-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--e-4);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ad-dentro > * {
+      animation: ad-subir var(--m-lento) var(--m-saida) both;
+    }
+    .ad-dentro > :nth-child(2) {
+      animation-delay: 60ms;
+    }
+    .ad-dentro > :nth-child(3) {
+      animation-delay: 120ms;
+    }
+    .ad-dentro > :nth-child(4) {
+      animation-delay: 180ms;
+    }
+    .ad-foto :global(img) {
+      animation: ad-assentar calc(var(--m-lento) * 1.6) var(--m-saida) both;
+    }
+  }
+  @keyframes ad-subir {
+    from {
+      translate: 0 1rem;
+    }
+  }
+  @keyframes ad-assentar {
+    from {
+      scale: 1.06;
+    }
+  }
+
+  .ad-foto {
+    position: relative;
+    overflow: hidden;
+    min-block-size: 44svh;
+    background: var(--cor-acento);
+  }
+  @media (min-width: 64rem) {
+    .ad-foto {
+      min-block-size: 0;
+    }
+  }
+  .ad-foto :global(img) {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .ad-foto::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgb(20 37 68 / 0.55) 0%,
+      rgb(20 37 68 / 0) 22%
+    );
+  }
+</style>

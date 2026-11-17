@@ -1,0 +1,30 @@
+# Exceção para o endpoint de contato.
+#
+# O .htaccess da raiz nega todo arquivo .php. Aqui a liberação é para um
+# arquivo nomeado, não para a pasta: uma regra do tipo "permita .php em
+# api/" voltaria a executar qualquer arquivo colocado aqui.
+#
+# Conferência depois de publicar: GET em /api/contato.php deve responder
+# 405 (o endpoint só aceita POST). 403 significa que esta exceção não teve
+# efeito; 404, que o arquivo não chegou; 500, erro de PHP.
+
+<Files "contato.php">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+</Files>
+
+# A resposta nunca vai para cache: uma confirmação de envio guardada em
+# cache apareceria para o próximo visitante.
+<IfModule mod_headers.c>
+  <Files "contato.php">
+    Header always set Cache-Control "no-store, no-cache, must-revalidate"
+    Header always set X-Content-Type-Options "nosniff"
+  </Files>
+</IfModule>
+
+Options -Indexes
